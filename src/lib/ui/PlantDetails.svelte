@@ -24,7 +24,7 @@
 	const isFormValid = $derived(allFieldsFilled);
 </script>
 
-<fieldset class="fieldset w-full max-w-4xl rounded-box border border-base-300 bg-base-200 p-6">
+<fieldset class="fieldset w-full rounded-box border border-base-300 bg-base-200 p-6">
 	<legend class="fieldset-legend">Create new plant</legend>
 
 	<div class="flex flex-col md:flex-row gap-8">

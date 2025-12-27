@@ -7,6 +7,7 @@
   import { util } from "$lib/services/leaf-library-utils";
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
+	import Footer from '$lib/ui/Footer.svelte';
 
   let { children } = $props();
 
@@ -35,6 +36,7 @@
   <div class="container mx-auto mt-10 px-4">
     {@render children()}
   </div>
+	<Footer />
 {:else if checked || publicRoutes.includes(page.url.pathname)}
   {@render children()}
 {/if}
