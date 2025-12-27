@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { NewUser, Plant } from "$lib/types/leaf-library-types";
+import type { NewPlant, NewUser, Plant } from "$lib/types/leaf-library-types";
 import type { BackendResponse, LoginPayload, Session } from "$lib/types/frontend-specific-types";
 import { util } from "$lib/services/leaf-library-utils";
 import { currentUser } from "$lib/runes.svelte";
@@ -28,7 +28,7 @@ export const leafLibraryService = {
       if (response.status === 201) {
         const loginData = response.data as Session;
         if (loginData.success) {
-          util.saveSession(loginData);
+          await util.saveSession(loginData);
           return {
             error: false,
             code: response.status
@@ -55,6 +55,33 @@ export const leafLibraryService = {
     } catch (error) {
       console.log(error);
       throw [];
+    }
+  },
+
+  async createPlantForUser(newPlant: NewPlant): Promise<BackendResponse> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+    try {
+      const response = await axios.post(
+        `${this.baseUrl}/api/users/${currentUser.id}/plants`,
+        newPlant
+      );
+      if (response.status === 201) {
+        await util.updateData();
+        return {
+          error: false,
+          code: response.status
+        };
+      }
+      return {
+        error: true,
+        code: response.status
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        error: true,
+        code: axios.isAxiosError(error) ? error.response?.status || 500 : 500
+      };
     }
   }
 };

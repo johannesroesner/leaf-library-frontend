@@ -4,8 +4,8 @@
   let { images, commonName, scientificName, type, biome, note, id } = $props();
 </script>
 
-<div class="card w-96 bg-base-100 shadow-2xl">
-  <figure class="relative h-64 bg-base-200">
+<div class="card w-63 bg-base-300 shadow-2xl card-xs">
+  <figure class="relative h-42">
     {#if images?.[0]}
       <img src={images[0]} alt={commonName} class="h-full w-full object-cover" />
     {:else}
@@ -46,7 +46,7 @@
     {/if}
 
     <div class="mt-4 card-actions justify-end">
-      <button class="btn btn-md btn-primary" onclick={() => goto(`/plants/${id}`)}>
+      <button class="btn btn-xs btn-primary" onclick={() => goto(`/plants/${id}`)}>
         Details
       </button>
     </div>

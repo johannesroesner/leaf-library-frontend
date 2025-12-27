@@ -1,26 +1,19 @@
 <script lang="ts">
-  import { leafLibraryService } from "$lib/services/leaf-library-service";
-  import { onMount } from "svelte";
-  import type { Plant } from "$lib/types/leaf-library-types";
-  import PlantCard from "$lib/ui/PlantCard.svelte";
-
-  let plants: Plant[] = [];
-  onMount(async () => {
-    plants = await leafLibraryService.getAllPlantsForUser();
-    console.log(plants);
-  });
+  import PlantList from "$lib/ui/PlantList.svelte";
+  import { currentPlants } from "$lib/runes.svelte";
+  import PlantForm from "./PlantForm.svelte";
 </script>
 
-<div class="flex flex-wrap gap-6">
-  {#each plants as plant (plant._id)}
-    <PlantCard
-      id={plant._id}
-      images={plant.imageUrls}
-      commonName={plant.commonName}
-      scientificName={plant.scientificName}
-      type={plant.type}
-      biome={plant.biome}
-      note={plant.note}
-    />
-  {/each}
+<div class="flex h-[600px] w-full flex-row gap-4 overflow-hidden">
+  <div class="flex w-2/3 items-center justify-center border-r border-gray-200 bg-slate-100">
+    <div class="text-center">
+      <p class="font-bold text-slate-400">placeholder map</p>
+    </div>
+  </div>
+
+  <PlantList plants={currentPlants.plants} />
+</div>
+
+<div class="mt-7 flex items-center">
+  <PlantForm />
 </div>

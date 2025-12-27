@@ -13,8 +13,8 @@
   let checked = $state(false);
   const publicRoutes = ["/", "/login", "/signup"];
 
-  onMount(() => {
-    util.restoreSession();
+  onMount(async () => {
+    await util.restoreSession();
 
     const isPublic = publicRoutes.includes(page.url.pathname);
 
@@ -28,11 +28,13 @@
   <link rel="icon" href={favicon} />
 </svelte:head>
 
-{#if checked || publicRoutes.includes(page.url.pathname)}
+{#if checked && !publicRoutes.includes(page.url.pathname)}
   {#if currentUser.id}
     <Navigation />
   {/if}
-  <div class="mt-10 flex items-center justify-center">
+  <div class="container mx-auto mt-10 px-4">
     {@render children()}
   </div>
+{:else if checked || publicRoutes.includes(page.url.pathname)}
+  {@render children()}
 {/if}

@@ -1,10 +1,11 @@
 import type { Session } from "$lib/types/frontend-specific-types";
 import Cookies from "js-cookie";
-import { currentUser } from "$lib/runes.svelte";
+import { currentPlants, currentUser } from "$lib/runes.svelte";
+import { leafLibraryService } from "$lib/services/leaf-library-service";
 
 export const util = {
-  saveSession(session: Session) {
-    this.updateRunes(session);
+  async saveSession(session: Session) {
+    await this.updateUserRunes(session);
     Cookies.set("leafLibrary", JSON.stringify(session), {
       expires: 7,
       path: "/",
@@ -12,24 +13,31 @@ export const util = {
     });
   },
 
-  restoreSession() {
+  async restoreSession() {
     const data = this.getCookieData();
     if (data) {
-      this.updateRunes(data);
+      await this.updateUserRunes(data);
     }
   },
 
-  clearSession() {
-    this.updateRunes({ _id: "", role: "", name: "", email: "", token: "" } as Session);
+  async clearSession() {
+    await this.updateUserRunes({ _id: "", role: "", name: "", email: "", token: "" } as Session);
     Cookies.remove("leafLibrary", { path: "/" });
   },
 
-  updateRunes(data: Session) {
+  async updateUserRunes(data: Session) {
     currentUser.id = data._id || "";
     currentUser.role = data.role || "";
     currentUser.name = data.name || "";
     currentUser.email = data.email || "";
     currentUser.token = data.token || "";
+    await this.updateData();
+  },
+
+  async updateData() {
+    if (currentUser.id) {
+      currentPlants.plants = await leafLibraryService.getAllPlantsForUser();
+    }
   },
 
   getCookieData(): Session | null {
