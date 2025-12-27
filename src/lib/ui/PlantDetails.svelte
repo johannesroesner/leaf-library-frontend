@@ -1,74 +1,77 @@
 <script lang="ts">
-  import { BiomeArray, PlantTypeArray } from "$lib/types/leaf-library-types";
+	import { BiomeArray, PlantTypeArray } from "$lib/types/leaf-library-types";
+	import ImageUploader from "./ImageUploader.svelte"; // Import nicht vergessen
 
-  let {
-    commonName = $bindable(""),
-    scientificName = $bindable(""),
-    note = $bindable(""),
-    latitude = $bindable(0),
-    longitude = $bindable(0),
-    type = $bindable(PlantTypeArray[0]),
-    biome = $bindable(BiomeArray[0]),
-    onSubmit
-  } = $props();
+	let {
+		commonName = $bindable(""),
+		scientificName = $bindable(""),
+		note = $bindable(""),
+		latitude = $bindable(0),
+		longitude = $bindable(0),
+		type = $bindable(PlantTypeArray[0]),
+		biome = $bindable(BiomeArray[0]),
+		images = $bindable([]),
+		onSubmit
+	} = $props();
 
-  const allFieldsFilled = $derived(
-    commonName.trim() !== "" &&
-      scientificName.trim() !== "" &&
-      latitude.toString() !== "" &&
-      longitude.toString() !== "" &&
-      type !== "" &&
-      biome !== ""
-  );
+	const allFieldsFilled = $derived(
+		commonName.trim() !== "" &&
+		scientificName.trim() !== "" &&
+		latitude.toString() !== "" &&
+		longitude.toString() !== ""
+	);
 
-  const isFormValid = $derived(allFieldsFilled);
+	const isFormValid = $derived(allFieldsFilled);
 </script>
 
-<fieldset class="fieldset w-xl rounded-box border border-base-300 bg-base-200 p-4">
-  <legend class="fieldset-legend">Create new plant</legend>
+<fieldset class="fieldset w-full max-w-4xl rounded-box border border-base-300 bg-base-200 p-6">
+	<legend class="fieldset-legend">Create new plant</legend>
 
-  <label class="label" for="common-name">Common Name</label>
-  <input
-    id="common-name"
-    bind:value={commonName}
-    type="text"
-    class="input"
-    placeholder="Monstera"
-    required
-  />
+	<div class="flex flex-col md:flex-row gap-8">
 
-  <label class="label" for="scientific-name">Scientific Name</label>
-  <input
-    id="scientific-name"
-    bind:value={scientificName}
-    type="text"
-    class="input"
-    placeholder="Monstera deliciosa"
-    required
-  />
+		<div class="flex-1 flex flex-col gap-2">
+			<label class="label" for="common-name">Common Name</label>
+			<input id="common-name" bind:value={commonName} type="text" class="input w-full" placeholder="Monstera" required />
 
-  <label class="label" for="plant-type">Plant Type</label>
-  <select id="plant-type" bind:value={type} class="select">
-    {#each PlantTypeArray as type (type)}
-      <option value={type}>{type}</option>
-    {/each}
-  </select>
+			<label class="label" for="scientific-name">Scientific Name</label>
+			<input id="scientific-name" bind:value={scientificName} type="text" class="input w-full" placeholder="Monstera deliciosa" required />
 
-  <label class="label" for="biome">Biome</label>
-  <select id="biome" bind:value={biome} class="select">
-    {#each BiomeArray as biome (biome)}
-      <option value={biome}>{biome}</option>
-    {/each}
-  </select>
+			<div class="grid grid-cols-2 gap-4">
+				<div>
+					<label class="label" for="plant-type">Plant Type</label>
+					<select id="plant-type" bind:value={type} class="select w-full">
+						{#each PlantTypeArray as type (type)}
+							<option value={type}>{type}</option>
+						{/each}
+					</select>
+				</div>
+				<div>
+					<label class="label" for="biome">Biome</label>
+					<select id="biome" bind:value={biome} class="select w-full">
+						{#each BiomeArray as biome (biome)}
+							<option value={biome}>{biome}</option>
+						{/each}
+					</select>
+				</div>
+			</div>
 
-  <label class="label" for="note">Note</label>
-  <input
-    id="note"
-    bind:value={note}
-    type="text"
-    class="input"
-    placeholder="Monstera deliciosa is native to tropical forests of southern Mexico, south to Panama."
-  />
+			<label class="label" for="note">Note</label>
+			<textarea
+				id="note"
+				bind:value={note}
+				class="textarea h-24"
+				placeholder="Monstera deliciosa is native to tropical forests of southern Mexico, south to Panama."
+			></textarea>
+		</div>
 
-  <button class="btn mt-4 btn-neutral" onclick={onSubmit} disabled={!isFormValid}>Create</button>
+		<div class="w-full md:w-80 border-l border-base-300">
+			<ImageUploader bind:images={images} multiple={true} />
+		</div>
+	</div>
+
+	<div class="mt-6 flex justify-end">
+		<button class="btn btn-neutral px-8" onclick={onSubmit} disabled={!isFormValid}>
+			Create Plant
+		</button>
+	</div>
 </fieldset>

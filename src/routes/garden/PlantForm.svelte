@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
   import { leafLibraryService } from "$lib/services/leaf-library-service.js";
-  import ErrorAlert from "$lib/ui/ErrorAlert.svelte";
   import PlantDetails from "$lib/ui/PlantDetails.svelte";
   import { BiomeArray, PlantTypeArray } from "$lib/types/leaf-library-types.js";
+	import Toast from '$lib/ui/Toast.svelte';
 
   let commonName = "";
   let scientificName = "";
@@ -12,12 +12,34 @@
   let type = PlantTypeArray[0];
   let biome = BiomeArray[0];
 
-  let imageUrls = [""];
-  const preparedImageUrls =
-    imageUrls.length === 0 || (imageUrls.length === 1 && imageUrls[0] === "") ? null : imageUrls;
+	let images: File[] = [];
+  let preparedImageUrls: string[] | null = [];
+
+	function resetForm() {
+		commonName = "";
+		scientificName = "";
+		note = "";
+		latitude = 0;
+		longitude = 0;
+		type = PlantTypeArray[0];
+		biome = BiomeArray[0];
+		images = [];
+		preparedImageUrls = [];
+	}
 
   let errorMessage = "";
+	let successMessage = "";
+
   const onSubmit = async () => {
+		if(images.length > 0){
+			console.log(images.length);
+			for (const image of images) {
+				const url = await leafLibraryService.uploadImage(image);
+				console.log(url);
+				preparedImageUrls!.push(url);
+			}
+		} else preparedImageUrls = null;
+
     const response = await leafLibraryService.createPlantForUser({
       commonName,
       scientificName,
@@ -29,6 +51,10 @@
       imageUrls: preparedImageUrls
     });
     if (response.error) errorMessage = "Server error.";
+		else {
+			resetForm()
+			successMessage = "Plant successfully created!"
+		}
   };
 </script>
 
@@ -40,8 +66,12 @@
   bind:longitude
   bind:type
   bind:biome
+	bind:images
   {onSubmit}
 />
+{#if successMessage}
+	<Toast text={successMessage} type="success" />
+{/if}
 {#if errorMessage}
-  <ErrorAlert text={errorMessage} />
+	<Toast text={errorMessage} type="error" />
 {/if}
