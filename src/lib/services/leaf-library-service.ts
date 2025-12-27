@@ -1,7 +1,8 @@
 import axios from "axios";
-import type { NewUser } from "$lib/types/leaf-library-types";
+import type { NewUser, Plant } from "$lib/types/leaf-library-types";
 import type { BackendResponse, LoginPayload, Session } from "$lib/types/frontend-specific-types";
 import { util } from "$lib/services/leaf-library-utils";
+import { currentUser } from "$lib/runes.svelte";
 
 export const leafLibraryService = {
   baseUrl: "http://localhost:3000",
@@ -43,6 +44,17 @@ export const leafLibraryService = {
         error: true,
         code: axios.isAxiosError(error) ? error.response?.status || 500 : 500
       };
+    }
+  },
+
+  async getAllPlantsForUser(): Promise<Plant[]> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+    try {
+      const response = await axios.get(`${this.baseUrl}/api/users/${currentUser.id}/plants`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      throw [];
     }
   }
 };
