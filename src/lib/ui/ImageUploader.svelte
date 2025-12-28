@@ -49,7 +49,7 @@
           />
           <button
             type="button"
-            class="btn absolute -top-2 -right-2 btn-circle opacity-0 transition-opacity btn-xs btn-error group-hover:opacity-100"
+            class="btn absolute -top-2 -right-2 btn-circle transition-opacity btn-xs btn-error"
             onclick={() => removeImage(index)}>✕</button
           >
         </div>

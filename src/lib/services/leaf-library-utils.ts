@@ -43,5 +43,12 @@ export const util = {
   getCookieData(): Session | null {
     const cookie = Cookies.get("leafLibrary");
     return cookie ? JSON.parse(cookie) : null;
+  },
+
+   getPublicIdFromImageUrl(url: string): string {
+    const parts = url.split("/");
+    const lastPart = parts.pop();
+    if (!lastPart) {return ""}
+    return lastPart.split(".")[0];
   }
 };

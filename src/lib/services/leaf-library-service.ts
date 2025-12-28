@@ -85,6 +85,57 @@ export const leafLibraryService = {
     }
   },
 
+  async updatePlant(plant: Plant): Promise<BackendResponse> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+    try {
+      const response = await axios.put(
+        `${this.baseUrl}/api/plants/${plant._id}`,
+        plant
+      );
+      if (response.status === 200) {
+        await util.updateData();
+        return {
+          error: false,
+          code: response.status
+        };
+      }
+      return {
+        error: true,
+        code: response.status
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        error: true,
+        code: axios.isAxiosError(error) ? error.response?.status || 500 : 500
+      };
+    }
+  },
+
+  async deletePlant(plant: Plant): Promise<BackendResponse> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+    try {
+      const response = await axios.delete(`${this.baseUrl}/api/plants/${plant._id}`);
+      if (response.status === 204) {
+        await util.updateData();
+        return {
+          error: false,
+          code: response.status
+        };
+      }
+      return {
+        error: true,
+        code: response.status
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        error: true,
+        code: axios.isAxiosError(error) ? error.response?.status || 500 : 500
+      };
+    }
+  },
+
   async uploadImage(image: File): Promise<string> {
     axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
     try {

@@ -12,7 +12,8 @@
     type = $bindable(PlantTypeArray[0]),
     biome = $bindable(BiomeArray[0]),
     images = $bindable([]),
-    onSubmit
+    onSubmit,
+		submitButtonText
   } = $props();
 
   const allFieldsFilled = $derived(
@@ -25,7 +26,7 @@
   const isFormValid = $derived(allFieldsFilled);
 </script>
 
-<fieldset class="fieldset w-full rounded-box border border-base-300 bg-base-200 p-6">
+<fieldset class="fieldset w-full rounded-box border border-base-300 bg-base-200 p-6 shadow-2xl">
   <legend class="fieldset-legend">Create new plant</legend>
 
   <div class="flex flex-col gap-8 md:flex-row">
@@ -67,15 +68,17 @@
             {/each}
           </select>
         </div>
-      </div>
 
-      <label class="label" for="note">Note</label>
-      <textarea
-        id="note"
-        bind:value={note}
-        class="textarea h-24"
-        placeholder="Monstera deliciosa is native to tropical forests of southern Mexico, south to Panama."
-      ></textarea>
+        <div class="col-span-2 flex flex-col gap-2">
+          <label class="label" for="note">Note</label>
+          <textarea
+            id="note"
+            bind:value={note}
+            class="textarea h-24 w-full"
+            placeholder="Monstera deliciosa is native to tropical forests..."
+          ></textarea>
+        </div>
+      </div>
     </div>
 
     <div class="flex w-full flex-col gap-4 md:w-96">
@@ -86,7 +89,7 @@
 
   <div class="mt-6 flex justify-end">
     <button class="btn px-8 btn-neutral" onclick={onSubmit} disabled={!isFormValid}>
-      Create Plant
+			{submitButtonText}
     </button>
   </div>
 </fieldset>

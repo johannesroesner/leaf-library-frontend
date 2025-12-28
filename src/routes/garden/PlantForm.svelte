@@ -32,10 +32,8 @@
 
   const onSubmit = async () => {
     if (images.length > 0) {
-      console.log(images.length);
       for (const image of images) {
         const url = await leafLibraryService.uploadImage(image);
-        console.log(url);
         preparedImageUrls!.push(url);
       }
     } else preparedImageUrls = null;
@@ -56,18 +54,21 @@
       successMessage = "Plant successfully created!";
     }
   };
+
+	const submitButtonText = "Create Plant";
 </script>
 
 <PlantDetails
-  bind:commonName
-  bind:scientificName
-  bind:note
-  bind:latitude
-  bind:longitude
-  bind:type
-  bind:biome
-  bind:images
-  {onSubmit}
+	bind:commonName
+	bind:scientificName
+	bind:note
+	bind:latitude
+	bind:longitude
+	bind:type
+	bind:biome
+	bind:images
+	onSubmit={onSubmit}
+	submitButtonText={submitButtonText}
 />
 {#if successMessage}
   <Toast text={successMessage} type="success" />
