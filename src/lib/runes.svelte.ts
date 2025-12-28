@@ -1,4 +1,4 @@
-import type { Plant } from "$lib/types/leaf-library-types";
+import type { Collection, Plant } from "$lib/types/leaf-library-types";
 
 export const pageTitle = $state("Leaf Library");
 
@@ -11,3 +11,4 @@ export const currentUser = $state({
 });
 
 export const currentPlants = $state({ plants: [] as Plant[] });
+export const currentCollections = $state({ collections: [] as Collection[] });

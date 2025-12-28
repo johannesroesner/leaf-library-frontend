@@ -1,6 +1,6 @@
 import type { Session } from "$lib/types/frontend-specific-types";
 import Cookies from "js-cookie";
-import { currentPlants, currentUser } from "$lib/runes.svelte";
+import { currentCollections, currentPlants, currentUser } from "$lib/runes.svelte";
 import { leafLibraryService } from "$lib/services/leaf-library-service";
 
 export const util = {
@@ -37,6 +37,7 @@ export const util = {
   async updateData() {
     if (currentUser.id) {
       currentPlants.plants = await leafLibraryService.getAllPlantsForUser();
+      currentCollections.collections = await leafLibraryService.getAllCollectionsForUser();
     }
   },
 

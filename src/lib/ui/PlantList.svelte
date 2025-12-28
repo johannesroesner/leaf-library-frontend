@@ -16,7 +16,7 @@
         note={plant.note}
       />
     {:else}
-      <p class="text-gray-500 italic">Keine Pflanzen gefunden.</p>
+      <p class="text-3xl">No plants found.</p>
     {/each}
   </div>
 </div>
