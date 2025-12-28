@@ -1,3 +1,5 @@
+import type { Plant } from "$lib/types/leaf-library-types";
+
 export const pageTitle = $state("Leaf Library");
 
 export const currentUser = $state({
@@ -7,3 +9,5 @@ export const currentUser = $state({
   name: "",
   role: ""
 });
+
+export const currentPlants = $state({ plants: [] as Plant[] });

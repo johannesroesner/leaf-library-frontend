@@ -1,7 +1,8 @@
 import axios from "axios";
-import type { NewUser } from "$lib/types/leaf-library-types";
+import type { NewPlant, NewUser, Plant } from "$lib/types/leaf-library-types";
 import type { BackendResponse, LoginPayload, Session } from "$lib/types/frontend-specific-types";
 import { util } from "$lib/services/leaf-library-utils";
+import { currentUser } from "$lib/runes.svelte";
 
 export const leafLibraryService = {
   baseUrl: "http://localhost:3000",
@@ -27,7 +28,7 @@ export const leafLibraryService = {
       if (response.status === 201) {
         const loginData = response.data as Session;
         if (loginData.success) {
-          util.saveSession(loginData);
+          await util.saveSession(loginData);
           return {
             error: false,
             code: response.status
@@ -44,5 +45,109 @@ export const leafLibraryService = {
         code: axios.isAxiosError(error) ? error.response?.status || 500 : 500
       };
     }
+  },
+
+  async getAllPlantsForUser(): Promise<Plant[]> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+    try {
+      const response = await axios.get(`${this.baseUrl}/api/users/${currentUser.id}/plants`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      throw [];
+    }
+  },
+
+  async createPlantForUser(newPlant: NewPlant): Promise<BackendResponse> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+    try {
+      const response = await axios.post(
+        `${this.baseUrl}/api/users/${currentUser.id}/plants`,
+        newPlant
+      );
+      if (response.status === 201) {
+        await util.updateData();
+        return {
+          error: false,
+          code: response.status
+        };
+      }
+      return {
+        error: true,
+        code: response.status
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        error: true,
+        code: axios.isAxiosError(error) ? error.response?.status || 500 : 500
+      };
+    }
+  },
+
+  async updatePlant(plant: Plant): Promise<BackendResponse> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+    try {
+      const response = await axios.put(`${this.baseUrl}/api/plants/${plant._id}`, plant);
+      if (response.status === 200) {
+        await util.updateData();
+        return {
+          error: false,
+          code: response.status
+        };
+      }
+      return {
+        error: true,
+        code: response.status
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        error: true,
+        code: axios.isAxiosError(error) ? error.response?.status || 500 : 500
+      };
+    }
+  },
+
+  async deletePlant(plant: Plant): Promise<BackendResponse> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+    try {
+      const response = await axios.delete(`${this.baseUrl}/api/plants/${plant._id}`);
+      if (response.status === 204) {
+        await util.updateData();
+        return {
+          error: false,
+          code: response.status
+        };
+      }
+      return {
+        error: true,
+        code: response.status
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        error: true,
+        code: axios.isAxiosError(error) ? error.response?.status || 500 : 500
+      };
+    }
+  },
+
+  async uploadImage(image: File): Promise<string> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+    try {
+      const formData = new FormData();
+      formData.append("file", image);
+      const response = await axios.post(`${this.baseUrl}/api/images`, formData);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      throw "";
+    }
+  },
+
+  async deleteImage(publicId: string): Promise<void> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+    await axios.delete(`${this.baseUrl}/api/images/${publicId}`);
   }
 };

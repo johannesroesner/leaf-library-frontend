@@ -1,5 +1,7 @@
+/*
 import { redirect } from "@sveltejs/kit";
 import type { Handle } from "@sveltejs/kit";
+import { util } from "$lib/services/leaf-library-utils";
 import { currentUser } from "$lib/runes.svelte";
 
 const publicRoutes = ["/", "/login", "/signup"];
@@ -7,6 +9,7 @@ const publicRoutes = ["/", "/login", "/signup"];
 export const handle: Handle = async ({ event, resolve }) => {
   const { pathname } = event.url;
 
+  util.restoreSession();
   const isPublicRoute = publicRoutes.includes(pathname);
 
   if (!currentUser.id && !isPublicRoute) {
@@ -15,3 +18,4 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   return resolve(event);
 };
+ */

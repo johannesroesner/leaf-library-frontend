@@ -1,34 +1,56 @@
 import type { Session } from "$lib/types/frontend-specific-types";
-import { currentUser } from "$lib/runes.svelte";
+import Cookies from "js-cookie";
+import { currentPlants, currentUser } from "$lib/runes.svelte";
+import { leafLibraryService } from "$lib/services/leaf-library-service";
 
 export const util = {
-  saveSession(session: Session) {
-    currentUser.id = session._id;
-    currentUser.role = session.role;
-    currentUser.name = session.name;
-    currentUser.email = session.email;
-    currentUser.token = session.token;
-    localStorage.leafLibrary = JSON.stringify(currentUser);
+  async saveSession(session: Session) {
+    await this.updateUserRunes(session);
+    Cookies.set("leafLibrary", JSON.stringify(session), {
+      expires: 7,
+      path: "/",
+      sameSite: "strict"
+    });
   },
 
-  restoreSession() {
-    const savedSession = localStorage.leafLibrary;
-    if (savedSession) {
-      const session: Session = JSON.parse(savedSession);
-      currentUser.id = session._id;
-      currentUser.role = session.role;
-      currentUser.name = session.name;
-      currentUser.email = session.email;
-      currentUser.token = session.token;
+  async restoreSession() {
+    const data = this.getCookieData();
+    if (data) {
+      await this.updateUserRunes(data);
     }
   },
 
-  clearSession() {
-    currentUser.id = "";
-    currentUser.role = "";
-    currentUser.name = "";
-    currentUser.email = "";
-    currentUser.token = "";
-    localStorage.removeItem("leafLibrary");
+  async clearSession() {
+    await this.updateUserRunes({ _id: "", role: "", name: "", email: "", token: "" } as Session);
+    Cookies.remove("leafLibrary", { path: "/" });
+  },
+
+  async updateUserRunes(data: Session) {
+    currentUser.id = data._id || "";
+    currentUser.role = data.role || "";
+    currentUser.name = data.name || "";
+    currentUser.email = data.email || "";
+    currentUser.token = data.token || "";
+    await this.updateData();
+  },
+
+  async updateData() {
+    if (currentUser.id) {
+      currentPlants.plants = await leafLibraryService.getAllPlantsForUser();
+    }
+  },
+
+  getCookieData(): Session | null {
+    const cookie = Cookies.get("leafLibrary");
+    return cookie ? JSON.parse(cookie) : null;
+  },
+
+  getPublicIdFromImageUrl(url: string): string {
+    const parts = url.split("/");
+    const lastPart = parts.pop();
+    if (!lastPart) {
+      return "";
+    }
+    return lastPart.split(".")[0];
   }
 };
