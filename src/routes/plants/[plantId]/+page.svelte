@@ -5,7 +5,7 @@
   import Toast from "$lib/ui/Toast.svelte";
   import PlantInfo from "$lib/ui/PlantInfo.svelte";
   import PlantImageCarousel from "$lib/ui/PlantImageCarousel.svelte";
-	import PlantForm from './PlantForm.svelte';
+  import PlantForm from "./PlantForm.svelte";
   import Toolbar from "$lib/ui/Toolbar.svelte";
   import { leafLibraryService } from "$lib/services/leaf-library-service";
   import { goto } from "$app/navigation";
@@ -15,13 +15,13 @@
 
   let updateStatus = $state(false);
   const deleteFunction = async () => {
-    if(plant!.imageUrls && plant!.imageUrls.length > 0) {
-      for(const url of plant!.imageUrls) {
+    if (plant!.imageUrls && plant!.imageUrls.length > 0) {
+      for (const url of plant!.imageUrls) {
         await leafLibraryService.deleteImage(util.getPublicIdFromImageUrl(url));
       }
     }
-   await leafLibraryService.deletePlant(plant!);
-   await goto('/garden');
+    await leafLibraryService.deletePlant(plant!);
+    await goto("/garden");
   };
 </script>
 
@@ -42,7 +42,7 @@
     </div>
   </div>
   {#if updateStatus}
-	  <PlantForm bind:plant />
+    <PlantForm bind:plant />
   {/if}
 {:else}
   <p class="text-5xl">Server error.</p>

@@ -55,20 +55,20 @@
     }
   };
 
-	const submitButtonText = "Create Plant";
+  const submitButtonText = "Create Plant";
 </script>
 
 <PlantDetails
-	bind:commonName
-	bind:scientificName
-	bind:note
-	bind:latitude
-	bind:longitude
-	bind:type
-	bind:biome
-	bind:images
-	onSubmit={onSubmit}
-	submitButtonText={submitButtonText}
+  bind:commonName
+  bind:scientificName
+  bind:note
+  bind:latitude
+  bind:longitude
+  bind:type
+  bind:biome
+  bind:images
+  {onSubmit}
+  {submitButtonText}
 />
 {#if successMessage}
   <Toast text={successMessage} type="success" />

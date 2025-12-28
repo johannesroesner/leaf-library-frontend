@@ -13,7 +13,7 @@
     biome = $bindable(BiomeArray[0]),
     images = $bindable([]),
     onSubmit,
-		submitButtonText
+    submitButtonText
   } = $props();
 
   const allFieldsFilled = $derived(
@@ -89,7 +89,7 @@
 
   <div class="mt-6 flex justify-end">
     <button class="btn px-8 btn-neutral" onclick={onSubmit} disabled={!isFormValid}>
-			{submitButtonText}
+      {submitButtonText}
     </button>
   </div>
 </fieldset>

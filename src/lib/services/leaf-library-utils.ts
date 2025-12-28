@@ -45,10 +45,12 @@ export const util = {
     return cookie ? JSON.parse(cookie) : null;
   },
 
-   getPublicIdFromImageUrl(url: string): string {
+  getPublicIdFromImageUrl(url: string): string {
     const parts = url.split("/");
     const lastPart = parts.pop();
-    if (!lastPart) {return ""}
+    if (!lastPart) {
+      return "";
+    }
     return lastPart.split(".")[0];
   }
 };

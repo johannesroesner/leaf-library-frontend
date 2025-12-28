@@ -88,10 +88,7 @@ export const leafLibraryService = {
   async updatePlant(plant: Plant): Promise<BackendResponse> {
     axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
     try {
-      const response = await axios.put(
-        `${this.baseUrl}/api/plants/${plant._id}`,
-        plant
-      );
+      const response = await axios.put(`${this.baseUrl}/api/plants/${plant._id}`, plant);
       if (response.status === 200) {
         await util.updateData();
         return {
