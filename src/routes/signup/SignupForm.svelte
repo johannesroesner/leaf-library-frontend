@@ -3,7 +3,7 @@
   import UserDetails from "$lib/ui/UserDetails.svelte";
   import { leafLibraryService } from "$lib/services/leaf-library-service.js";
   import { goto } from "$app/navigation";
-	import Toast from '$lib/ui/Toast.svelte';
+  import Toast from "$lib/ui/Toast.svelte";
 
   let firstName = "";
   let secondName = "";
@@ -25,7 +25,7 @@
 
 <HeroBackground>
   <UserDetails bind:firstName bind:secondName bind:email bind:password {onSubmit} />
-	{#if errorMessage}
-		<Toast text={errorMessage} type="error" />
-	{/if}
+  {#if errorMessage}
+    <Toast text={errorMessage} type="error" />
+  {/if}
 </HeroBackground>

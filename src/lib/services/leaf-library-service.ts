@@ -85,11 +85,11 @@ export const leafLibraryService = {
     }
   },
 
-  async uploadImage(image :File): Promise<string> {
+  async uploadImage(image: File): Promise<string> {
     axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
     try {
       const formData = new FormData();
-      formData.append('file', image);
+      formData.append("file", image);
       const response = await axios.post(`${this.baseUrl}/api/images`, formData);
       return response.data;
     } catch (error) {
@@ -98,8 +98,8 @@ export const leafLibraryService = {
     }
   },
 
-  async deleteImage( publicId: string): Promise<void> {
+  async deleteImage(publicId: string): Promise<void> {
     axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
     await axios.delete(`${this.baseUrl}/api/images/${publicId}`);
-  },
+  }
 };

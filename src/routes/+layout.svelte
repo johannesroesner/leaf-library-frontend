@@ -7,7 +7,7 @@
   import { util } from "$lib/services/leaf-library-utils";
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
-	import Footer from '$lib/ui/Footer.svelte';
+  import Footer from "$lib/ui/Footer.svelte";
 
   let { children } = $props();
 
@@ -29,14 +29,20 @@
   <link rel="icon" href={favicon} />
 </svelte:head>
 
-{#if checked && !publicRoutes.includes(page.url.pathname)}
-  {#if currentUser.id}
-    <Navigation />
+<div class="flex min-h-screen flex-col">
+  {#if checked && !publicRoutes.includes(page.url.pathname)}
+    {#if currentUser.id}
+      <Navigation />
+    {/if}
+    <main class="flex-grow">
+      <div class="container mx-auto mt-10 px-4">
+        {@render children()}
+      </div>
+    </main>
+    <Footer />
+  {:else if checked || publicRoutes.includes(page.url.pathname)}
+    <main class="flex-grow">
+      {@render children()}
+    </main>
   {/if}
-  <div class="container mx-auto mt-10 px-4">
-    {@render children()}
-  </div>
-	<Footer />
-{:else if checked || publicRoutes.includes(page.url.pathname)}
-  {@render children()}
-{/if}
+</div>

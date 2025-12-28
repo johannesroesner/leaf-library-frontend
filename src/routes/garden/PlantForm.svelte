@@ -2,7 +2,7 @@
   import { leafLibraryService } from "$lib/services/leaf-library-service.js";
   import PlantDetails from "$lib/ui/PlantDetails.svelte";
   import { BiomeArray, PlantTypeArray } from "$lib/types/leaf-library-types.js";
-	import Toast from '$lib/ui/Toast.svelte';
+  import Toast from "$lib/ui/Toast.svelte";
 
   let commonName = "";
   let scientificName = "";
@@ -12,33 +12,33 @@
   let type = PlantTypeArray[0];
   let biome = BiomeArray[0];
 
-	let images: File[] = [];
+  let images: File[] = [];
   let preparedImageUrls: string[] | null = [];
 
-	function resetForm() {
-		commonName = "";
-		scientificName = "";
-		note = "";
-		latitude = 0;
-		longitude = 0;
-		type = PlantTypeArray[0];
-		biome = BiomeArray[0];
-		images = [];
-		preparedImageUrls = [];
-	}
+  function resetForm() {
+    commonName = "";
+    scientificName = "";
+    note = "";
+    latitude = 0;
+    longitude = 0;
+    type = PlantTypeArray[0];
+    biome = BiomeArray[0];
+    images = [];
+    preparedImageUrls = [];
+  }
 
   let errorMessage = "";
-	let successMessage = "";
+  let successMessage = "";
 
   const onSubmit = async () => {
-		if(images.length > 0){
-			console.log(images.length);
-			for (const image of images) {
-				const url = await leafLibraryService.uploadImage(image);
-				console.log(url);
-				preparedImageUrls!.push(url);
-			}
-		} else preparedImageUrls = null;
+    if (images.length > 0) {
+      console.log(images.length);
+      for (const image of images) {
+        const url = await leafLibraryService.uploadImage(image);
+        console.log(url);
+        preparedImageUrls!.push(url);
+      }
+    } else preparedImageUrls = null;
 
     const response = await leafLibraryService.createPlantForUser({
       commonName,
@@ -51,10 +51,10 @@
       imageUrls: preparedImageUrls
     });
     if (response.error) errorMessage = "Server error.";
-		else {
-			resetForm()
-			successMessage = "Plant successfully created!"
-		}
+    else {
+      resetForm();
+      successMessage = "Plant successfully created!";
+    }
   };
 </script>
 
@@ -66,12 +66,12 @@
   bind:longitude
   bind:type
   bind:biome
-	bind:images
+  bind:images
   {onSubmit}
 />
 {#if successMessage}
-	<Toast text={successMessage} type="success" />
+  <Toast text={successMessage} type="success" />
 {/if}
 {#if errorMessage}
-	<Toast text={errorMessage} type="error" />
+  <Toast text={errorMessage} type="error" />
 {/if}
