@@ -1,6 +1,7 @@
 <script lang="ts">
   import { BiomeArray, PlantTypeArray } from "$lib/types/leaf-library-types";
-  import ImageUploader from "./ImageUploader.svelte"; // Import nicht vergessen
+  import ImageUploader from "./ImageUploader.svelte";
+  import MapPicker from "$lib/ui/MapPicker.svelte";
 
   let {
     commonName = $bindable(""),
@@ -77,8 +78,9 @@
       ></textarea>
     </div>
 
-    <div class="w-full border-l border-base-300 md:w-80">
-      <ImageUploader bind:images multiple={true} />
+    <div class="flex w-full flex-col gap-4 md:w-96">
+      <ImageUploader bind:images multiple />
+      <MapPicker bind:latitude bind:longitude />
     </div>
   </div>
 
