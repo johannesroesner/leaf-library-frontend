@@ -38,7 +38,7 @@
         description,
         imageUrl
       };
-      successMessage = "Collection successfully created!";
+      successMessage = "Collection successfully updated!";
     }
   };
 

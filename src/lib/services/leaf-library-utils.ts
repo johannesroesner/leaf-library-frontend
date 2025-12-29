@@ -32,6 +32,7 @@ export const util = {
     currentUser.email = data.email || "";
     currentUser.token = data.token || "";
     currentUser.imageUrl = data.imageUrl || "";
+    currentUser.aboutMe = data.aboutMe || "";
     await this.updateData();
   },
 

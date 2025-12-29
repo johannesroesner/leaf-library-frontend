@@ -13,7 +13,9 @@
   const allFieldsFilled = $derived(name.trim() !== "" && description.trim() !== "");
 </script>
 
-<fieldset class="mt-5 fieldset w-full rounded-box border border-base-300 bg-base-200 p-4">
+<fieldset
+  class="mt-5 fieldset w-full rounded-box border border-base-300 bg-base-200 p-4 shadow-2xl"
+>
   <legend class="fieldset-legend">{title}</legend>
   <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
     <div class="flex flex-col gap-4">

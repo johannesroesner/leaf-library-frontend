@@ -4,7 +4,8 @@ import type {
   NewCollection,
   NewPlant,
   NewUser,
-  Plant
+  Plant,
+  Profile
 } from "$lib/types/leaf-library-types";
 import type { BackendResponse, LoginPayload, Session } from "$lib/types/frontend-specific-types";
 import { util } from "$lib/services/leaf-library-utils";
@@ -276,6 +277,41 @@ export const leafLibraryService = {
         `${this.baseUrl}/api/collections/${collection._id}`,
         collection
       );
+      if (response.status === 200) {
+        await util.updateData();
+        return {
+          error: false,
+          code: response.status
+        };
+      }
+      return {
+        error: true,
+        code: response.status
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        error: true,
+        code: axios.isAxiosError(error) ? error.response?.status || 500 : 500
+      };
+    }
+  },
+
+  async updateProfile(profile: Profile): Promise<BackendResponse> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+    try {
+      const response = await axios.put(`${this.baseUrl}/api/users/${profile._id}`, profile);
+      const newProfile = response.data as Profile;
+      await util.saveSession({
+        success: true,
+        token: currentUser.token,
+        _id: newProfile._id,
+        email: newProfile.email,
+        role: newProfile.role,
+        name: newProfile.firstName + " " + newProfile.secondName,
+        imageUrl: newProfile.imageUrl,
+        aboutMe: newProfile.aboutMe
+      });
       if (response.status === 200) {
         await util.updateData();
         return {

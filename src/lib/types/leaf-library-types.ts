@@ -18,6 +18,8 @@ export type UserCredential = Omit<
   "_id" | "aboutMe" | "imageUrl" | "firstName" | "secondName"
 >;
 
+export type Profile = Omit<User, "password">;
+
 // plant
 export const PlantTypeArray = [
   "Tree",
