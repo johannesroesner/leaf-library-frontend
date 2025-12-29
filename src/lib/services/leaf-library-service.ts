@@ -1,5 +1,11 @@
 import axios from "axios";
-import type { NewPlant, NewUser, Plant } from "$lib/types/leaf-library-types";
+import type {
+  Collection,
+  NewCollection,
+  NewPlant,
+  NewUser,
+  Plant
+} from "$lib/types/leaf-library-types";
 import type { BackendResponse, LoginPayload, Session } from "$lib/types/frontend-specific-types";
 import { util } from "$lib/services/leaf-library-utils";
 import { currentUser } from "$lib/runes.svelte";
@@ -114,6 +120,163 @@ export const leafLibraryService = {
     try {
       const response = await axios.delete(`${this.baseUrl}/api/plants/${plant._id}`);
       if (response.status === 204) {
+        await util.updateData();
+        return {
+          error: false,
+          code: response.status
+        };
+      }
+      return {
+        error: true,
+        code: response.status
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        error: true,
+        code: axios.isAxiosError(error) ? error.response?.status || 500 : 500
+      };
+    }
+  },
+
+  async getAllCollectionsForUser(): Promise<Collection[]> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+    try {
+      const response = await axios.get(`${this.baseUrl}/api/users/${currentUser.id}/collections`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      throw [];
+    }
+  },
+
+  async getAllPlantsForCollection(collection: Collection): Promise<Plant[]> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+    try {
+      const response = await axios.get(`${this.baseUrl}/api/collections/${collection._id}/plants`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      throw [];
+    }
+  },
+
+  async removePlantFromCollection(
+    collection: Collection,
+    plantId: string
+  ): Promise<BackendResponse> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+    try {
+      const response = await axios.delete(
+        `${this.baseUrl}/api/collections/${collection._id}/deletePlant/${plantId}`
+      );
+      if (response.status === 204) {
+        await util.updateData();
+        await util.updateData();
+        return {
+          error: false,
+          code: response.status
+        };
+      }
+      return {
+        error: true,
+        code: response.status
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        error: true,
+        code: axios.isAxiosError(error) ? error.response?.status || 500 : 500
+      };
+    }
+  },
+
+  async addPlantToCollection(collection: Collection, plantId: string): Promise<BackendResponse> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+    try {
+      const response = await axios.post(
+        `${this.baseUrl}/api/collections/${collection._id}/addPlant/${plantId}`
+      );
+      if (response.status === 201) {
+        await util.updateData();
+        await util.updateData();
+        return {
+          error: false,
+          code: response.status
+        };
+      }
+      return {
+        error: true,
+        code: response.status
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        error: true,
+        code: axios.isAxiosError(error) ? error.response?.status || 500 : 500
+      };
+    }
+  },
+
+  async createCollectionForUser(newCollection: NewCollection): Promise<BackendResponse> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+    try {
+      const response = await axios.post(
+        `${this.baseUrl}/api/users/${currentUser.id}/collections`,
+        newCollection
+      );
+      if (response.status === 201) {
+        await util.updateData();
+        return {
+          error: false,
+          code: response.status
+        };
+      }
+      return {
+        error: true,
+        code: response.status
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        error: true,
+        code: axios.isAxiosError(error) ? error.response?.status || 500 : 500
+      };
+    }
+  },
+
+  async deleteCollection(collection: Collection): Promise<BackendResponse> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+    try {
+      const response = await axios.delete(`${this.baseUrl}/api/collections/${collection._id}`);
+      if (response.status === 204) {
+        await util.updateData();
+        return {
+          error: false,
+          code: response.status
+        };
+      }
+      return {
+        error: true,
+        code: response.status
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        error: true,
+        code: axios.isAxiosError(error) ? error.response?.status || 500 : 500
+      };
+    }
+  },
+
+  async updateCollection(collection: Collection): Promise<BackendResponse> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+    try {
+      const response = await axios.put(
+        `${this.baseUrl}/api/collections/${collection._id}`,
+        collection
+      );
+      if (response.status === 200) {
         await util.updateData();
         return {
           error: false,

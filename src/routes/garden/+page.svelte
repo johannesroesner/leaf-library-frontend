@@ -10,8 +10,9 @@
       <p class="font-bold text-slate-400">placeholder map</p>
     </div>
   </div>
-
-  <PlantList plants={currentPlants.plants} />
+  <div class="w-1/3 overflow-y-scroll">
+    <PlantList plants={currentPlants.plants} />
+  </div>
 </div>
 
 <div class="mt-7 flex items-center">

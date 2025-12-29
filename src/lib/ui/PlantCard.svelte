@@ -1,18 +1,26 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
 
-  let { images, commonName, scientificName, type, biome, note, id } = $props();
+  let {
+    images,
+    commonName,
+    scientificName,
+    type,
+    biome,
+    note,
+    id,
+    plantFunction,
+    plantFunctionKey
+  } = $props();
 </script>
 
-<div class="hover-3d card w-63 bg-base-300 shadow-2xl card-xs">
+<div class="hover-3d card w-63 rounded-2xl bg-base-300 shadow-2xl card-xs">
   <div>
-    <figure class="relative h-42">
+    <figure class="relative h-42 rounded-t-2xl">
       {#if images?.[0]}
         <img src={images[0]} alt={commonName} class="h-full w-full object-cover" />
       {:else}
-        <div
-          class="flex h-full w-full items-center justify-center bg-gray-300 text-gray-500 dark:bg-neutral"
-        >
+        <div class="flex h-full w-full items-center justify-center bg-gray-300 text-gray-500">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -37,9 +45,16 @@
       </h2>
       <p class="text-sm italic opacity-70">{scientificName}</p>
 
-      <div class="mt-2 flex gap-2">
-        <div class="badge badge-secondary">{type}</div>
-        <div class="badge badge-secondary">{biome}</div>
+      <div class="mt-2 flex justify-between">
+        <div class="flex gap-2">
+          <div class="badge badge-secondary">{type}</div>
+          <div class="badge badge-secondary">{biome}</div>
+        </div>
+        {#if plantFunction && plantFunctionKey}
+          <button class="btn btn-primary" onclick={() => plantFunction?.(id)}>
+            {plantFunctionKey}
+          </button>
+        {/if}
       </div>
 
       {#if note}
