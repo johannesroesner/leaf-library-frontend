@@ -40,7 +40,47 @@ export const util = {
     if (currentUser.id) {
       currentPlants.plants = await leafLibraryService.getAllPlantsForUser();
       currentCollections.collections = await leafLibraryService.getAllCollectionsForUser();
+
+      this.sortPlantTypes();
+      this.sortPlantBiomes();
     }
+  },
+
+  sortPlantTypes() {
+    currentPlants.plantsTypeTree = currentPlants.plants.filter((plant) => plant.type === "Tree");
+    currentPlants.plantsTypeFern = currentPlants.plants.filter((plant) => plant.type === "Fern");
+    currentPlants.plantsTypeMoss = currentPlants.plants.filter((plant) => plant.type === "Moss");
+    currentPlants.plantsTypeGrass = currentPlants.plants.filter((plant) => plant.type === "Grass");
+    currentPlants.plantsTypeAquaticPlant = currentPlants.plants.filter(
+      (plant) => plant.type === "Aquatic Plant"
+    );
+    currentPlants.plantsTypeClimber = currentPlants.plants.filter(
+      (plant) => plant.type === "Climber"
+    );
+    currentPlants.plantsTypeOther = currentPlants.plants.filter((plant) => plant.type === "Other");
+  },
+
+  sortPlantBiomes() {
+    currentPlants.plantsBiomeUrban = currentPlants.plants.filter(
+      (plant) => plant.biome === "Urban"
+    );
+    currentPlants.plantsBiomeMeadow = currentPlants.plants.filter(
+      (plant) => plant.biome === "Meadow"
+    );
+    currentPlants.plantsBiomeForest = currentPlants.plants.filter(
+      (plant) => plant.biome === "Forest"
+    );
+    currentPlants.plantsBiomePond = currentPlants.plants.filter((plant) => plant.biome === "Pond");
+    currentPlants.plantsBiomeRiver = currentPlants.plants.filter(
+      (plant) => plant.biome === "River"
+    );
+    currentPlants.plantsBiomeSea = currentPlants.plants.filter((plant) => plant.biome === "Sea");
+    currentPlants.plantsBiomeDesert = currentPlants.plants.filter(
+      (plant) => plant.biome === "Desert"
+    );
+    currentPlants.plantsBiomeOther = currentPlants.plants.filter(
+      (plant) => plant.biome === "Other"
+    );
   },
 
   getCookieData(): Session | null {

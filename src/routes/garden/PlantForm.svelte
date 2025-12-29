@@ -4,15 +4,17 @@
   import { BiomeArray, PlantTypeArray } from "$lib/types/leaf-library-types.js";
   import Toast from "$lib/ui/Toast.svelte";
 
-  let commonName = "";
-  let scientificName = "";
-  let note = "";
-  let latitude = 0;
-  let longitude = 0;
-  let type = PlantTypeArray[0];
-  let biome = BiomeArray[0];
+  let { mapEvent = null } = $props();
 
-  let images: File[] = [];
+  let commonName = $state("");
+  let scientificName = $state("");
+  let note = $state("");
+  let latitude = $state(0);
+  let longitude = $state(0);
+  let type = $state(PlantTypeArray[0]);
+  let biome = $state(BiomeArray[0]);
+
+  let images: File[] = $state([]);
   let preparedImageUrls: string[] | null = [];
 
   function resetForm() {
@@ -27,8 +29,8 @@
     preparedImageUrls = [];
   }
 
-  let errorMessage = "";
-  let successMessage = "";
+  let errorMessage = $state("");
+  let successMessage = $state("");
 
   const onSubmit = async () => {
     if (images.length > 0) {
@@ -38,7 +40,7 @@
       }
     } else preparedImageUrls = null;
 
-    const response = await leafLibraryService.createPlantForUser({
+    const newPlant = {
       commonName,
       scientificName,
       note: note === "" ? null : note,
@@ -47,9 +49,12 @@
       type,
       biome,
       imageUrls: preparedImageUrls
-    });
+    };
+
+    const response = await leafLibraryService.createPlantForUser(newPlant);
     if (response.error) errorMessage = "Server error.";
     else {
+      mapEvent(newPlant);
       resetForm();
       successMessage = "Plant successfully created!";
     }
