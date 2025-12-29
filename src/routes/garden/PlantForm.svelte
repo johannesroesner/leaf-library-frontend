@@ -56,6 +56,7 @@
   };
 
   const submitButtonText = "Create Plant";
+  const title = "Create a new Plant";
 </script>
 
 <PlantDetails
@@ -69,6 +70,7 @@
   bind:images
   {onSubmit}
   {submitButtonText}
+  {title}
 />
 {#if successMessage}
   <Toast text={successMessage} type="success" />

@@ -13,7 +13,8 @@
     biome = $bindable(BiomeArray[0]),
     images = $bindable([]),
     onSubmit,
-    submitButtonText
+    submitButtonText,
+    title
   } = $props();
 
   const allFieldsFilled = $derived(
@@ -27,7 +28,7 @@
 </script>
 
 <fieldset class="fieldset w-full rounded-box border border-base-300 bg-base-200 p-6 shadow-2xl">
-  <legend class="fieldset-legend">Create new plant</legend>
+  <legend class="fieldset-legend">{title}</legend>
 
   <div class="flex flex-col gap-8 md:flex-row">
     <div class="flex flex-1 flex-col gap-2">

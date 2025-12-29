@@ -1,7 +1,7 @@
 <script>
-import CollectionCard from "$lib/ui/CollectionCard.svelte";
+  import CollectionCard from "$lib/ui/CollectionCard.svelte";
 
-let { collections } = $props();
+  let { collections } = $props();
 </script>
 
 {#each collections as collection (collection._id)}

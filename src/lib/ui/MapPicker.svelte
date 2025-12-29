@@ -8,10 +8,41 @@
   let map: L.Map;
   let marker: L.Marker;
 
+  function getCurrentPosition(): Promise<{ latitude: number; longitude: number }> {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject();
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (position) =>
+          resolve({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          }),
+        reject
+      );
+    });
+  }
+
   onMount(async () => {
     const L = await import("leaflet");
 
-    map = L.map(mapElement).setView([latitude ?? 50, longitude ?? 10], 4);
+    let startLatitude = 49.0134;
+    let startLongitude = 12.1016;
+
+    try {
+      const position = await getCurrentPosition();
+      startLatitude = position.latitude;
+      startLongitude = position.longitude;
+    } catch (error) {
+      console.log(error);
+    }
+
+    if (!latitude) latitude = startLatitude;
+    if (!longitude) longitude = startLongitude;
+
+    map = L.map(mapElement).setView([startLatitude, startLongitude], 4);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: "© OpenStreetMap"
