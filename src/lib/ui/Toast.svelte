@@ -15,7 +15,7 @@
 
 {#if visible}
   <div transition:fade={{ duration: 200 }} class="toast toast-end">
-    <div class="alert {type === 'error' ? 'alert-danger' : 'alert-success'}">
+    <div class="alert {type === 'error' ? 'alert-error' : 'alert-success'}">
       <span>{text}</span>
     </div>
   </div>

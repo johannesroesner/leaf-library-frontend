@@ -1,5 +1,13 @@
 <script>
   import { page } from "$app/state";
+  import { currentUser } from "$lib/runes.svelte.js";
+  import { goto } from "$app/navigation";
+
+  const initials = currentUser.name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
 </script>
 
 <div class="navbar bg-base-100 shadow-2xl">
@@ -25,13 +33,36 @@
         Charts
       </a>
     </div>
-    <div class="avatar h-12 w-12">
-      <div class="rounded-full">
-        <img
-          alt="User profile."
-          src="https://images.unsplash.com/vector-1745610393569-9373c9c64117?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        />
+    <div class="dropdown dropdown-end">
+      <div tabIndex="0" role="button" class="avatar h-12 w-12 cursor-pointer rounded-full">
+        <div class="relative h-full w-full overflow-hidden rounded-full">
+          {#if currentUser.imageUrl}
+            <img
+              src={currentUser.imageUrl}
+              alt={currentUser.name}
+              class="h-full w-full object-cover"
+            />
+          {:else}
+            <div
+              class="flex h-full w-full items-center justify-center bg-secondary text-sm font-bold text-white"
+            >
+              {initials}
+            </div>
+          {/if}
+        </div>
       </div>
+
+      <ul
+        tabIndex="0"
+        class="dropdown-content menu z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow-2xl"
+      >
+        <li><a href="/profile">Profile</a></li>
+        <li>
+          <button class="btn mt-2 btn-sm btn-error" onclick={async () => await goto("/logout")}
+            >Logout</button
+          >
+        </li>
+      </ul>
     </div>
   </div>
 </div>

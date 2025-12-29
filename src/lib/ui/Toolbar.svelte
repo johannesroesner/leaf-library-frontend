@@ -1,5 +1,5 @@
 <script lang="ts">
-  let { updateStatus = $bindable(false), deleteFunction } = $props();
+  let { updateStatus = $bindable(false), deleteFunction = null } = $props();
 
   function goBack() {
     history.back();
@@ -13,6 +13,8 @@
   <button class="btn btn-neutral" onclick={goBack}> Back </button>
   <div class="space-x-2">
     <button class="btn btn-neutral" onclick={setUpdateStatus}> Update </button>
-    <button class="btn btn-error" onclick={deleteFunction}> Delete </button>
+    {#if deleteFunction}
+      <button class="btn btn-error" onclick={deleteFunction}> Delete </button>
+    {/if}
   </div>
 </div>
