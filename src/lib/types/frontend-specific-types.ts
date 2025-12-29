@@ -1,3 +1,5 @@
+import type { PlantType } from "$lib/types/leaf-library-types";
+
 export interface BackendResponse {
   error: boolean;
   code: number;
@@ -18,3 +20,5 @@ export interface Session {
   imageUrl: string | null;
   aboutMe: string | null;
 }
+
+export type FilterType = "all" | PlantType;

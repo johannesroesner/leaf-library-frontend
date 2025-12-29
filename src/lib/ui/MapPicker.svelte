@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type * as Leaflet from 'leaflet';
+  import type * as Leaflet from "leaflet";
   import "leaflet/dist/leaflet.css";
   import { leafletService } from "$lib/services/leaflet-service.js";
 

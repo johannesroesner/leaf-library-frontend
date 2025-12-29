@@ -13,14 +13,17 @@
     plantFunctionKey,
     mapEvent = null
   } = $props();
-
 </script>
 
-<div class="hover-3d card w-63 rounded-2xl bg-base-300 shadow-2xl card-xs "
-     onclick={() => mapEvent(id)}
-     onkeydown={() => { mapEvent(id)}}
-     role="button"
-     tabindex="0">
+<div
+  class="hover-3d card w-63 rounded-2xl bg-base-300 shadow-2xl card-xs"
+  onclick={() => mapEvent(id)}
+  onkeydown={() => {
+    mapEvent(id);
+  }}
+  role="button"
+  tabindex="0"
+>
   <div>
     <figure class="relative h-42 rounded-t-2xl">
       {#if images?.[0]}

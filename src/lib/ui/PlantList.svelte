@@ -1,7 +1,7 @@
 <script lang="ts">
   import PlantCard from "$lib/ui/PlantCard.svelte";
   import type { Plant } from "$lib/types/leaf-library-types";
-  let { plants, plantFunction, plantFunctionKey, mapEvent} = $props<{
+  let { plants, plantFunction, plantFunctionKey, mapEvent } = $props<{
     plants: Plant[];
     plantFunction?: (plantId: string) => Promise<void>;
     plantFunctionKey?: string;

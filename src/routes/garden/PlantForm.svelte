@@ -54,7 +54,7 @@
     const response = await leafLibraryService.createPlantForUser(newPlant);
     if (response.error) errorMessage = "Server error.";
     else {
-      mapEvent(newPlant)
+      mapEvent(newPlant);
       resetForm();
       successMessage = "Plant successfully created!";
     }
