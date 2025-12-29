@@ -1,4 +1,5 @@
 import type { Collection, Plant } from "$lib/types/leaf-library-types";
+import type { FilterType } from "$lib/types/frontend-specific-types";
 
 export const pageTitle = $state("Leaf Library");
 
@@ -12,16 +13,9 @@ export const currentUser = $state({
   aboutMe: ""
 });
 
-export const PlantTypeArray = [
-  "Tree",
-  "Flower",
-  "Fern",
-  "Moss",
-  "Grass",
-  "Aquatic Plant",
-  "Climber",
-  "Other"
-] as const;
+export const  currentPlantFilter= $state({
+  value: "all" as FilterType,
+});
 
 export const currentPlants = $state(
   { plants: [] as Plant[],
@@ -34,6 +28,23 @@ export const currentPlants = $state(
     plantsTypeAquaticPlant: [] as Plant[],
     plantsTypeClimber: [] as Plant[],
     plantsTypeOther: [] as Plant[],
+
+    get filteredList() {
+      const filter = currentPlantFilter.value;
+      if (filter === "all") return this.plants;
+      const mapping: Record<string, Plant[]> = {
+        "Tree": this.plantsTypeTree,
+        "Flower": this.plantsTypeFlower,
+        "Fern": this.plantsTypeFern,
+        "Moss": this.plantsTypeMoss,
+        "Grass": this.plantsTypeGrass,
+        "Aquatic Plant": this.plantsTypeAquaticPlant,
+        "Climber": this.plantsTypeClimber,
+        "Other": this.plantsTypeOther
+      };
+
+      return mapping[filter] ?? this.plants;
+    },
 
     plantsBiomeUrban: [] as Plant[],
     plantsBiomeMeadow: [] as Plant[],
