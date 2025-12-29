@@ -11,10 +11,7 @@
 
 <div class="mb-4 flex items-center gap-3">
   <span class="text-sm font-bold opacity-70">Filter Plants:</span>
-  <select
-    class="select select-bordered select-sm w-full max-w-xs"
-    onchange={handleFilter}
-  >
+  <select class="select-bordered select w-full max-w-xs select-sm" onchange={handleFilter}>
     <option value="All">Show all</option>
     {#each PlantTypeArray as type (type)}
       <option value={type}>{type}</option>
