@@ -15,4 +15,5 @@ export interface Session {
   name: string;
   token: string;
   role: string;
+  imageUrl: string | null;
 }

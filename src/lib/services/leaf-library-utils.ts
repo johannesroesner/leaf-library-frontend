@@ -31,6 +31,7 @@ export const util = {
     currentUser.name = data.name || "";
     currentUser.email = data.email || "";
     currentUser.token = data.token || "";
+    currentUser.imageUrl = data.imageUrl || "";
     await this.updateData();
   },
 

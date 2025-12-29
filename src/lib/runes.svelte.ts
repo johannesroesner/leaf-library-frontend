@@ -7,7 +7,8 @@ export const currentUser = $state({
   id: "",
   email: "",
   name: "",
-  role: ""
+  role: "",
+  imageUrl: "",
 });
 
 export const currentPlants = $state({ plants: [] as Plant[] });
