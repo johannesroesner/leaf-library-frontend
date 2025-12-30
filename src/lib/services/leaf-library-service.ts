@@ -17,7 +17,7 @@ import { util } from "$lib/services/leaf-library-utils";
 import { currentUser } from "$lib/runes.svelte";
 
 export const leafLibraryService = {
-  baseUrl: "http://localhost:3000",
+  baseUrl: "https://leaf-library-backend.onrender.com",
 
   async authenticateViaGithub(gitHubOAuthRequest: GitHubOAuthRequest): Promise<BackendResponse> {
     try {
