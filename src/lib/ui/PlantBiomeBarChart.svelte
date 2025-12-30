@@ -2,29 +2,16 @@
   import { onMount } from "svelte";
   import * as echarts from "echarts";
   import { currentPlants } from "$lib/runes.svelte";
+  import { BiomeArray } from "$lib/types/leaf-library-types";
 
   let chartElement: HTMLElement;
 
   onMount(() => {
     const chart = echarts.init(chartElement);
-
-    const data = [
-      { value: currentPlants.plantsBiomeDesert.length, name: "Desert" },
-      { value: currentPlants.plantsBiomeForest.length, name: "Forest" },
-      { value: currentPlants.plantsBiomeMeadow.length, name: "Meadow" },
-      { value: currentPlants.plantsBiomeRiver.length, name: "River" },
-      { value: currentPlants.plantsBiomePond.length, name: "Pond" },
-      { value: currentPlants.plantsBiomeSea.length, name: "Sea" },
-      { value: currentPlants.plantsBiomeUrban.length, name: "Urban" },
-      { value: currentPlants.plantsBiomeOther.length, name: "Other" }
-    ].filter((item) => item.value > 0);
-
-    const total = currentPlants.plants.length;
-
     const option = {
       title: {
         text: "Plant Biome Distribution",
-        subtext: `Total Plants: ${total}`,
+        subtext: `Total Plants: ${currentPlants.plants.length}`,
         left: "left",
         textStyle: { color: "#fff" }
       },
@@ -40,7 +27,7 @@
       },
       xAxis: {
         type: "category",
-        data: data.map((item) => item.name),
+        data: [...BiomeArray],
         axisLabel: { color: "#fff" }
       },
       yAxis: {
@@ -48,21 +35,7 @@
         minInterval: 1,
         axisLabel: { color: "#fff" }
       },
-      series: [
-        {
-          name: "Count",
-          type: "bar",
-          data: data.map((item) => item.value),
-          itemStyle: {
-            color: "#1fb854"
-          },
-          label: {
-            show: true,
-            position: "top",
-            color: "#fff"
-          }
-        }
-      ]
+      series: currentPlants.distributionPlantBiomes
     };
     chart.setOption(option);
   });
