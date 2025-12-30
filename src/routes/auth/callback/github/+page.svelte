@@ -13,13 +13,11 @@
       if (!response.error) {
         await util.updateData();
         goto("/garden");
-      } else {
-        goto("/");
       }
     } else goto("/");
   });
 </script>
 
 <div class="flex min-h-screen flex-col items-center justify-center">
-  <span class="loading loading-lg loading-spinner"> loading</span>
+  <span class="loading loading-xl loading-spinner"></span>
 </div>
