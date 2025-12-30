@@ -10,6 +10,10 @@ export interface LoginPayload {
   password: string;
 }
 
+export interface GitHubOAuthRequest {
+  code: string;
+}
+
 export interface Session {
   success: boolean;
   _id: string;
