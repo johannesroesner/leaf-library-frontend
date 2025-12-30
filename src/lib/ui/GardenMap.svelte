@@ -17,7 +17,8 @@
     currentPlants.filteredList.forEach((plant) => {
       const detailsLink = `<a href="/plants/${plant._id}" class="font-bold">Details</a>`;
 
-      L.marker([plant.latitude, plant.longitude])
+      const greenIcon = leafletService.createGreenIcon(L);
+      L.marker([plant.latitude, plant.longitude], { icon: greenIcon })
         .bindPopup(
           `
         <div class="p-1">
@@ -45,11 +46,30 @@
     map = L.map(mapElement).setView([startPosition.latitude, startPosition.longitude], 8);
 
     const baseMaps = {
-      Default: L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "© OpenStreetMap"
+      Default: L.tileLayer("https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png", {
+        attribution:
+          '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
       }).addTo(map),
+      "Dark Default": L.tileLayer(
+        "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png",
+        {
+          attribution:
+            '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
+        }
+      ),
+      "Open Street Map": L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap"
+      }),
+      Satellite: L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        {
+          attribution:
+            "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+        }
+      ),
       Topography: L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
-        attribution: "© OpenTopoMap"
+        attribution: "© OpenTopoMap",
+        maxZoom: 16
       })
     };
     L.control.layers(baseMaps).addTo(map);
