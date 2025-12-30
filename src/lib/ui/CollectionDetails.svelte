@@ -46,7 +46,7 @@
       <ImageUploader bind:images={image} multiple={false} />
     </div>
   </div>
-  <button class="btn mt-6 w-full btn-neutral" onclick={onSubmit} disabled={!allFieldsFilled}>
+  <button class="btn mt-6 w-full btn-primary" onclick={onSubmit} disabled={!allFieldsFilled}>
     {submitButtonText}
   </button>
 </fieldset>

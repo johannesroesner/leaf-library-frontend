@@ -1,9 +1,21 @@
+import leafIcon from "$lib/assets/leaf.png";
+import type * as Leaflet from "leaflet";
+
 export const defaultMapEntry = {
   latitude: 49.0134,
   longitude: 12.1016
 };
 
 export const leafletService = {
+  createGreenIcon(L: typeof Leaflet) {
+    return L.icon({
+      iconUrl: leafIcon,
+      iconSize: [64, 64],
+      iconAnchor: [32, 64],
+      popupAnchor: [0, -60]
+    });
+  },
+
   async getStartPosition(): Promise<{ latitude: number; longitude: number }> {
     let startLatitude = defaultMapEntry.latitude;
     let startLongitude = defaultMapEntry.longitude;

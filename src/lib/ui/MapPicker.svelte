@@ -20,11 +20,22 @@
 
     map = L.map(mapElement).setView([startPosition.latitude, startPosition.longitude], 8);
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "© OpenStreetMap"
+    L.tileLayer("https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png", {
+      attribution:
+        '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
     }).addTo(map);
 
-    marker = L.marker([latitude, longitude], { draggable: true }).addTo(map);
+    // credits for the colored marker icons: https://github.com/pointhi/leaflet-color-markers
+    const redIcon = new L.Icon({
+      iconUrl:
+        "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+      shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+    marker = L.marker([latitude, longitude], { draggable: true, icon: redIcon }).addTo(map);
 
     map.on("click", (event) => {
       latitude = event.latlng.lat;
@@ -76,4 +87,4 @@
   </div>
 </div>
 
-<div bind:this={mapElement} class="h-64 w-full rounded-lg border"></div>
+<div bind:this={mapElement} class="h-64 w-full rounded-lg shadow-2xl"></div>
