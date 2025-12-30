@@ -7,12 +7,42 @@ import type {
   Plant,
   Profile
 } from "$lib/types/leaf-library-types";
-import type { BackendResponse, LoginPayload, Session } from "$lib/types/frontend-specific-types";
+import type {
+  BackendResponse,
+  GitHubOAuthRequest,
+  LoginPayload,
+  Session
+} from "$lib/types/frontend-specific-types";
 import { util } from "$lib/services/leaf-library-utils";
 import { currentUser } from "$lib/runes.svelte";
 
 export const leafLibraryService = {
   baseUrl: "http://localhost:3000",
+
+  async authenticateViaGithub(gitHubOAuthRequest: GitHubOAuthRequest): Promise<BackendResponse> {
+    try {
+      const response = await axios.post(`${this.baseUrl}/api/auth/github`, gitHubOAuthRequest);
+      if (response.status === 201) {
+        const loginData = response.data as Session;
+        if (loginData.success) {
+          await util.saveSession(loginData);
+          return {
+            error: false,
+            code: response.status
+          };
+        }
+      }
+      return {
+        error: true,
+        code: response.status
+      };
+    } catch (error) {
+      return {
+        error: true,
+        code: axios.isAxiosError(error) ? error.response?.status || 500 : 500
+      };
+    }
+  },
 
   async signup(user: NewUser): Promise<BackendResponse> {
     try {

@@ -12,7 +12,7 @@
   let { children } = $props();
 
   let checked = $state(false);
-  const publicRoutes = ["/", "/login", "/signup"];
+  const publicRoutes = ["/", "/login", "/signup", "/auth/login/github", "/auth/callback/github"];
 
   onMount(async () => {
     await util.restoreSession();
