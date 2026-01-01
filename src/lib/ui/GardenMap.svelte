@@ -10,7 +10,7 @@
   let map: Leaflet.Map;
   let markerGroup: Leaflet.LayerGroup;
 
-  function updateMarkers() {
+  export function updateMarkers() {
     if (!map || !L || !markerGroup) return;
 
     markerGroup.clearLayers();

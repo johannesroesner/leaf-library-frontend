@@ -3,6 +3,7 @@ import type { PlantType } from "$lib/types/leaf-library-types";
 export interface BackendResponse {
   error: boolean;
   code: number;
+  data?: Session;
 }
 
 export interface LoginPayload {

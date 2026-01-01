@@ -1,5 +1,13 @@
 <script lang="ts">
-  let { imageUrls, removeImage } = $props();
+  import { enhance } from "$app/forms";
+  import type { SubmitFunction } from "@sveltejs/kit";
+
+  interface Props {
+    imageUrls: string[] | null;
+    handle?: SubmitFunction;
+  }
+
+  let { imageUrls = [], handle }: Props = $props();
 </script>
 
 {#if imageUrls && imageUrls.length > 0}
@@ -8,16 +16,18 @@
     <div class="flex flex-wrap gap-4">
       {#each imageUrls as url (url)}
         <div class="indicator">
-          <button
-            type="button"
-            class="indicator-item badge cursor-pointer badge-sm transition-transform badge-error hover:scale-110"
-            onclick={() => removeImage(url)}
-          >
-            ✕
-          </button>
+          <form method="POST" action="?/deleteImage" use:enhance={handle}>
+            <input type="hidden" name="url" value={url} />
+            <button
+              type="submit"
+              class="indicator-item badge cursor-pointer badge-sm transition-transform badge-error hover:scale-110"
+            >
+              ✕
+            </button>
+          </form>
           <div class="avatar">
             <div class="h-20 w-20 rounded-lg">
-              <img src={url} alt="Preview." />
+              <img src={url} alt="Preview" loading="lazy" />
             </div>
           </div>
         </div>

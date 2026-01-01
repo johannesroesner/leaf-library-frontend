@@ -25,7 +25,6 @@ export const leafLibraryService = {
       if (response.status === 201) {
         const loginData = response.data as Session;
         if (loginData.success) {
-          await util.saveSession(loginData);
           return {
             error: false,
             code: response.status
@@ -65,10 +64,10 @@ export const leafLibraryService = {
       if (response.status === 201) {
         const loginData = response.data as Session;
         if (loginData.success) {
-          await util.saveSession(loginData);
           return {
             error: false,
-            code: response.status
+            code: response.status,
+            data: loginData
           };
         }
       }
@@ -84,10 +83,10 @@ export const leafLibraryService = {
     }
   },
 
-  async getAllPlantsForUser(): Promise<Plant[]> {
-    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+  async getAllPlantsForUser(session: Session): Promise<Plant[]> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + session.token;
     try {
-      const response = await axios.get(`${this.baseUrl}/api/users/${currentUser.id}/plants`);
+      const response = await axios.get(`${this.baseUrl}/api/users/${session._id}/plants`);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -103,10 +102,10 @@ export const leafLibraryService = {
         newPlant
       );
       if (response.status === 201) {
-        await util.updateData();
         return {
           error: false,
-          code: response.status
+          code: response.status,
+          data: response.data
         };
       }
       return {
@@ -127,10 +126,10 @@ export const leafLibraryService = {
     try {
       const response = await axios.put(`${this.baseUrl}/api/plants/${plant._id}`, plant);
       if (response.status === 200) {
-        await util.updateData();
         return {
           error: false,
-          code: response.status
+          code: response.status,
+          data: response.data
         };
       }
       return {
@@ -170,10 +169,10 @@ export const leafLibraryService = {
     }
   },
 
-  async getAllCollectionsForUser(): Promise<Collection[]> {
-    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+  async getAllCollectionsForUser(session: Session): Promise<Collection[]> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + session.token;
     try {
-      const response = await axios.get(`${this.baseUrl}/api/users/${currentUser.id}/collections`);
+      const response = await axios.get(`${this.baseUrl}/api/users/${session._id}/collections`);
       return response.data;
     } catch (error) {
       console.log(error);

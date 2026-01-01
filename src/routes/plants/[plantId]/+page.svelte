@@ -6,27 +6,33 @@
   import PlantImageCarousel from "$lib/ui/PlantImageCarousel.svelte";
   import PlantForm from "./PlantForm.svelte";
   import Toolbar from "$lib/ui/Toolbar.svelte";
-  import { leafLibraryService } from "$lib/services/leaf-library-service";
-  import { goto } from "$app/navigation";
   import { util } from "$lib/services/leaf-library-utils";
   import DetailMap from "$lib/ui/DetailMap.svelte";
+  import type { Collection, Plant } from "$lib/types/leaf-library-types";
 
-  let plant = $derived(currentPlants.plants.find((p) => p._id === page.params.plantId));
-
-  let updateStatus = $state(false);
-  const deleteFunction = async () => {
-    if (plant!.imageUrls && plant!.imageUrls.length > 0) {
-      for (const url of plant!.imageUrls) {
-        await leafLibraryService.deleteImage(util.getPublicIdFromImageUrl(url));
-      }
-    }
-    await leafLibraryService.deletePlant(plant!);
-    await goto("/garden");
+  type Props = {
+    data: {
+      plants: Plant[];
+      collections: Collection[];
+    };
   };
+
+  let { data }: Props = $props();
+  util.updateData(data.plants, data.collections);
+
+  let plant = $state(currentPlants.plants.find((p) => p._id === page.params.plantId));
+  let updateStatus = $state(false);
+
+  function plantUpdated(updatedPlant: Plant) {
+    data.plants.push(updatedPlant);
+    util.updateData(data.plants, data.collections);
+    plant = updatedPlant;
+    updateStatus = false;
+  }
 </script>
 
 {#if plant}
-  <Toolbar bind:updateStatus {deleteFunction} />
+  <Toolbar bind:updateStatus deleteAction="?/delete" />
   <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
     <div class="flex flex-col gap-4 lg:col-span-1">
       <DetailMap latitude={plant.latitude} longitude={plant.longitude} mapType="default" />
@@ -42,7 +48,7 @@
     </div>
   </div>
   {#if updateStatus}
-    <PlantForm bind:plant />
+    <PlantForm bind:plant updateEvent={plantUpdated} />
   {/if}
 {:else}
   <p class="text-5xl">Server error.</p>

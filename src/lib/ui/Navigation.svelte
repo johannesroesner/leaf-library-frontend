@@ -1,7 +1,6 @@
 <script>
   import { page } from "$app/state";
   import { currentUser } from "$lib/runes.svelte.js";
-  import { goto } from "$app/navigation";
 
   const initials = currentUser.name
     .split(" ")
@@ -57,11 +56,7 @@
         class="dropdown-content menu z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow-2xl"
       >
         <li><a href="/profile">Profile</a></li>
-        <li>
-          <button class="btn mt-2 btn-sm btn-error" onclick={async () => await goto("/logout")}
-            >Logout</button
-          >
-        </li>
+        <li><a href="/logout">Logout</a></li>
       </ul>
     </div>
   </div>

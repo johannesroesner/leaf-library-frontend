@@ -30,6 +30,7 @@
   <label class="label" for="image-upload"> Image upload </label>
 
   <input
+    name="images"
     id="image-upload"
     type="file"
     accept="image/*"

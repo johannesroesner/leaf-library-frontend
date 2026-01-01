@@ -1,31 +1,28 @@
 import type { Session } from "$lib/types/frontend-specific-types";
 import Cookies from "js-cookie";
 import { currentCollections, currentPlants, currentUser } from "$lib/runes.svelte";
-import { leafLibraryService } from "$lib/services/leaf-library-service";
+import type { Collection, Plant } from "$lib/types/leaf-library-types";
 
 export const util = {
   async saveSession(session: Session) {
-    await this.updateUserRunes(session);
+    console.log(JSON.stringify(session).length);
     Cookies.set("leafLibrary", JSON.stringify(session), {
       expires: 7,
       path: "/",
       sameSite: "strict"
     });
+
+    const test = this.getCookieData();
+    console.log(test);
+    await this.updateUserRunes(session);
   },
 
-  async restoreSession() {
-    const data = this.getCookieData();
-    if (data) {
-      await this.updateUserRunes(data);
-    }
+  clearSession() {
+    this.updateUserRunes({ _id: "", role: "", name: "", email: "", token: "" } as Session);
+    this.updateData([], []);
   },
 
-  async clearSession() {
-    await this.updateUserRunes({ _id: "", role: "", name: "", email: "", token: "" } as Session);
-    Cookies.remove("leafLibrary", { path: "/" });
-  },
-
-  async updateUserRunes(data: Session) {
+  updateUserRunes(data: Session) {
     currentUser.id = data._id || "";
     currentUser.role = data.role || "";
     currentUser.name = data.name || "";
@@ -33,13 +30,12 @@ export const util = {
     currentUser.token = data.token || "";
     currentUser.imageUrl = data.imageUrl || "";
     currentUser.aboutMe = data.aboutMe || "";
-    await this.updateData();
   },
 
-  async updateData() {
+  updateData(plants: Plant[], collections: Collection[]) {
     if (currentUser.id) {
-      currentPlants.plants = await leafLibraryService.getAllPlantsForUser();
-      currentCollections.collections = await leafLibraryService.getAllCollectionsForUser();
+      currentPlants.plants = plants;
+      currentCollections.collections = collections;
 
       this.sortPlantTypes();
       this.sortPlantBiomes();

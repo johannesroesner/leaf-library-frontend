@@ -65,6 +65,7 @@
   <div class="form-control">
     <label class="label text-xs" for="latitude">Latitude</label>
     <input
+      name="latitude"
       id="latitude"
       type="number"
       step="any"
@@ -77,6 +78,7 @@
   <div class="form-control">
     <label class="label text-xs" for="longitude">Longitude</label>
     <input
+      name="longitude"
       id="longitude"
       type="number"
       step="any"
