@@ -13,7 +13,6 @@ import type {
   LoginPayload,
   Session
 } from "$lib/types/frontend-specific-types";
-import { util } from "$lib/services/leaf-library-utils";
 import { currentUser } from "$lib/runes.svelte";
 
 export const leafLibraryService = {
@@ -58,7 +57,7 @@ export const leafLibraryService = {
     }
   },
 
-  async login(loginPayload: LoginPayload): Promise<BackendResponse> {
+  async login(loginPayload: LoginPayload): Promise<BackendResponse<Session>> {
     try {
       const response = await axios.post(`${this.baseUrl}/api/users/authenticate`, loginPayload);
       if (response.status === 201) {
@@ -150,7 +149,6 @@ export const leafLibraryService = {
     try {
       const response = await axios.delete(`${this.baseUrl}/api/plants/${plant._id}`);
       if (response.status === 204) {
-        await util.updateData();
         return {
           error: false,
           code: response.status
@@ -201,8 +199,6 @@ export const leafLibraryService = {
         `${this.baseUrl}/api/collections/${collection._id}/deletePlant/${plantId}`
       );
       if (response.status === 204) {
-        await util.updateData();
-        await util.updateData();
         return {
           error: false,
           code: response.status
@@ -228,8 +224,6 @@ export const leafLibraryService = {
         `${this.baseUrl}/api/collections/${collection._id}/addPlant/${plantId}`
       );
       if (response.status === 201) {
-        await util.updateData();
-        await util.updateData();
         return {
           error: false,
           code: response.status
@@ -256,7 +250,6 @@ export const leafLibraryService = {
         newCollection
       );
       if (response.status === 201) {
-        await util.updateData();
         return {
           error: false,
           code: response.status
@@ -280,7 +273,6 @@ export const leafLibraryService = {
     try {
       const response = await axios.delete(`${this.baseUrl}/api/collections/${collection._id}`);
       if (response.status === 204) {
-        await util.updateData();
         return {
           error: false,
           code: response.status
@@ -307,7 +299,6 @@ export const leafLibraryService = {
         collection
       );
       if (response.status === 200) {
-        await util.updateData();
         return {
           error: false,
           code: response.status
@@ -326,26 +317,25 @@ export const leafLibraryService = {
     }
   },
 
-  async updateProfile(profile: Profile): Promise<BackendResponse> {
+  async updateProfile(profile: Profile): Promise<BackendResponse<Session>> {
     axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
     try {
       const response = await axios.put(`${this.baseUrl}/api/users/${profile._id}`, profile);
       const newProfile = response.data as Profile;
-      await util.saveSession({
-        success: true,
-        token: currentUser.token,
-        _id: newProfile._id,
-        email: newProfile.email,
-        role: newProfile.role,
-        name: newProfile.firstName + " " + newProfile.secondName,
-        imageUrl: newProfile.imageUrl,
-        aboutMe: newProfile.aboutMe
-      });
       if (response.status === 200) {
-        await util.updateData();
         return {
           error: false,
-          code: response.status
+          code: response.status,
+          data: {
+            success: true,
+            token: currentUser.token,
+            _id: newProfile._id,
+            email: newProfile.email,
+            role: newProfile.role,
+            name: newProfile.firstName + " " + newProfile.secondName,
+            imageUrl: newProfile.imageUrl,
+            aboutMe: newProfile.aboutMe
+          }
         };
       }
       return {

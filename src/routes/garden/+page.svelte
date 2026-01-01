@@ -15,6 +15,7 @@
   };
 
   let { data }: Props = $props();
+
   util.updateData(data.plants, data.collections);
 
   let map: GardenMap;
@@ -49,5 +50,5 @@
 </div>
 
 <div class="mt-7 flex items-center">
-  <PlantForm mapEvent={plantCreated} />
+  <PlantForm createEvent={plantCreated} />
 </div>

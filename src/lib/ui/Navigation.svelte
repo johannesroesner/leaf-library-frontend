@@ -2,11 +2,13 @@
   import { page } from "$app/state";
   import { currentUser } from "$lib/runes.svelte.js";
 
-  const initials = currentUser.name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
+  const initials = $derived(
+    currentUser.name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+  );
 </script>
 
 <div class="navbar bg-base-100 shadow-2xl">

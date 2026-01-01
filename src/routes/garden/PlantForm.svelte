@@ -3,14 +3,18 @@
   import Toast from "$lib/ui/Toast.svelte";
   import { enhance } from "$app/forms";
   import type { SubmitFunction } from "@sveltejs/kit";
+  import type { Plant } from "$lib/types/leaf-library-types";
 
-  let { mapEvent = null } = $props();
+  type Props = {
+    createEvent: (plant: Plant) => void;
+  };
+  let { createEvent }: Props = $props();
 
   const handleCreationSuccess: SubmitFunction = () => {
     return async ({ result, update }) => {
       if (result.type === "success") {
         if (result.data) {
-          if (mapEvent) mapEvent(result.data.data);
+          if (createEvent) createEvent(result.data.data);
           successMessage = result.data.successMessage as string;
         }
         await update();
