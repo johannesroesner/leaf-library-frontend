@@ -178,10 +178,10 @@ export const leafLibraryService = {
     }
   },
 
-  async getAllPlantsForCollection(collection: Collection): Promise<Plant[]> {
+  async getAllPlantsForCollection(collectionId: string): Promise<Plant[]> {
     axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
     try {
-      const response = await axios.get(`${this.baseUrl}/api/collections/${collection._id}/plants`);
+      const response = await axios.get(`${this.baseUrl}/api/collections/${collectionId}/plants`);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -189,14 +189,11 @@ export const leafLibraryService = {
     }
   },
 
-  async removePlantFromCollection(
-    collection: Collection,
-    plantId: string
-  ): Promise<BackendResponse> {
+  async removePlantFromCollection(collectionId: string, plantId: string): Promise<BackendResponse> {
     axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
     try {
       const response = await axios.delete(
-        `${this.baseUrl}/api/collections/${collection._id}/deletePlant/${plantId}`
+        `${this.baseUrl}/api/collections/${collectionId}/deletePlant/${plantId}`
       );
       if (response.status === 204) {
         return {
@@ -217,11 +214,11 @@ export const leafLibraryService = {
     }
   },
 
-  async addPlantToCollection(collection: Collection, plantId: string): Promise<BackendResponse> {
+  async addPlantToCollection(collectionId: string, plantId: string): Promise<BackendResponse> {
     axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
     try {
       const response = await axios.post(
-        `${this.baseUrl}/api/collections/${collection._id}/addPlant/${plantId}`
+        `${this.baseUrl}/api/collections/${collectionId}/addPlant/${plantId}`
       );
       if (response.status === 201) {
         return {
@@ -252,7 +249,8 @@ export const leafLibraryService = {
       if (response.status === 201) {
         return {
           error: false,
-          code: response.status
+          code: response.status,
+          data: response.data
         };
       }
       return {
@@ -301,7 +299,8 @@ export const leafLibraryService = {
       if (response.status === 200) {
         return {
           error: false,
-          code: response.status
+          code: response.status,
+          data: response.data
         };
       }
       return {

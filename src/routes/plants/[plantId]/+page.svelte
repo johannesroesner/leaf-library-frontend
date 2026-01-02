@@ -8,31 +8,30 @@
   import Toolbar from "$lib/ui/Toolbar.svelte";
   import { util } from "$lib/services/leaf-library-utils";
   import DetailMap from "$lib/ui/DetailMap.svelte";
-  import type { Collection, Plant } from "$lib/types/leaf-library-types";
+  import type { Plant } from "$lib/types/leaf-library-types";
 
   type Props = {
     data: {
       plants: Plant[];
-      collections: Collection[];
     };
   };
 
   let { data }: Props = $props();
-  util.updateData(data.plants, data.collections);
+  util.updateData(data.plants, []);
 
   let plant = $state(currentPlants.plants.find((p) => p._id === page.params.plantId));
   let updateStatus = $state(false);
 
   function plantUpdated(updatedPlant: Plant) {
     data.plants.push(updatedPlant);
-    util.updateData(data.plants, data.collections);
+    util.updateData(data.plants, []);
     plant = updatedPlant;
     updateStatus = false;
   }
 </script>
 
 {#if plant}
-  <Toolbar bind:updateStatus deleteAction="?/delete" />
+  <Toolbar bind:updateStatus deleteAction="?/deletePlant" />
   <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
     <div class="flex flex-col gap-4 lg:col-span-1">
       <DetailMap latitude={plant.latitude} longitude={plant.longitude} mapType="default" />

@@ -1,7 +1,5 @@
 <script lang="ts">
-  import { leafLibraryService } from "$lib/services/leaf-library-service.js";
   import Toast from "$lib/ui/Toast.svelte";
-  import { util } from "$lib/services/leaf-library-utils";
   import ImageDeleteBar from "$lib/ui/ImageDeleteBar.svelte";
   import type { Profile } from "$lib/types/leaf-library-types";
   import ProfileDetails from "$lib/ui/ProfileDetails.svelte";
@@ -46,17 +44,11 @@
     };
   };
 
-  const removeImage = async (url: string) => {
-    await leafLibraryService.deleteImage(util.getPublicIdFromImageUrl(url));
-    profile.imageUrl = null;
-    await leafLibraryService.updateProfile(profile);
-  };
-
   const submitButtonText = "Update Profile";
   const title = "Update Profile Details";
 </script>
 
-<ImageDeleteBar imageUrls={imageUrl ? [imageUrl] : null} {removeImage} />
+<ImageDeleteBar imageUrls={imageUrl ? [imageUrl] : null} handle={handleUpdate} />
 
 <form
   method="POST"

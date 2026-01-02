@@ -50,5 +50,45 @@ export const actions = {
         data: response.data
       };
     }
+  },
+
+  deleteImage: async ({ request, locals, cookies }) => {
+    const session = locals.session;
+    if (!session) return fail(401);
+
+    const form = await request.formData();
+    const url = form.get("url") as string;
+
+    const response = await leafLibraryService.updateProfile({
+      _id: currentUser.id,
+      firstName: currentUser.name.split(" ")[0],
+      secondName: currentUser.name.split(" ")[1],
+      email: currentUser.email,
+      aboutMe: currentUser.aboutMe ? currentUser.aboutMe : null,
+      imageUrl: null,
+      role: currentUser.role as unknown as Role
+    });
+
+    if (response.error) {
+      if (response.code === 409) {
+        return fail(409, { errorMessage: "E-mail already in use." });
+      }
+      return fail(500, { errorMessage: "Server error." });
+    } else {
+      const userJson = JSON.stringify(response.data);
+      cookies.set("leafLibrary", userJson, {
+        path: "/",
+        httpOnly: true,
+        sameSite: "strict",
+        secure: !dev,
+        maxAge: 60 * 60 * 24 * 7
+      });
+      await leafLibraryService.deleteImage(util.getPublicIdFromImageUrl(url));
+      return {
+        success: true,
+        successMessage: "Profile successfully updated!",
+        data: response.data
+      };
+    }
   }
 };

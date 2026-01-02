@@ -1,10 +1,12 @@
 <script lang="ts">
   import PlantCard from "$lib/ui/PlantCard.svelte";
   import type { Plant } from "$lib/types/leaf-library-types";
-  let { plants, plantFunction, plantFunctionKey, mapEvent } = $props<{
+  import type { SubmitFunction } from "@sveltejs/kit";
+  let { plants, plantFunctionAction, plantFunctionKey, handle, mapEvent } = $props<{
     plants: Plant[];
-    plantFunction?: (plantId: string) => Promise<void>;
+    plantFunctionAction?: string;
     plantFunctionKey?: string;
+    handle?: SubmitFunction;
     mapEvent?: (plantId: string) => void;
   }>();
 </script>
@@ -20,8 +22,9 @@
         type={plant.type}
         biome={plant.biome}
         note={plant.note}
-        {plantFunction}
+        {plantFunctionAction}
         {plantFunctionKey}
+        {handle}
         {mapEvent}
       />
     {:else}

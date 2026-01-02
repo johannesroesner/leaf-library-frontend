@@ -8,15 +8,14 @@ export const load: PageServerLoad = async ({ parent }) => {
   const { session } = await parent();
   if (session) {
     return {
-      plants: await leafLibraryService.getAllPlantsForUser(session),
-      collections: await leafLibraryService.getAllCollectionsForUser(session)
+      plants: await leafLibraryService.getAllPlantsForUser(session)
     };
   }
   return { plants: [], collections: [] };
 };
 
 export const actions = {
-  delete: async ({ params, locals }) => {
+  deletePlant: async ({ params, locals }) => {
     const session = locals.session;
     if (!session) return fail(401);
 

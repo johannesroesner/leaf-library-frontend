@@ -3,20 +3,17 @@
   import { currentPlants } from "$lib/runes.svelte";
   import PlantForm from "./PlantForm.svelte";
   import GardenMap from "$lib/ui/GardenMap.svelte";
-  import type { Collection, Plant } from "$lib/types/leaf-library-types";
+  import type { Plant } from "$lib/types/leaf-library-types";
   import PlantFilterBar from "$lib/ui/PlantFilterBar.svelte";
   import { util } from "$lib/services/leaf-library-utils";
 
   type Props = {
     data: {
       plants: Plant[];
-      collections: Collection[];
     };
   };
-
   let { data }: Props = $props();
-
-  util.updateData(data.plants, data.collections);
+  util.updateData(data.plants, []);
 
   let map: GardenMap;
 
