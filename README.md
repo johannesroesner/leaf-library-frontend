@@ -46,27 +46,23 @@ For information about the backend data model and system architecture, see the [b
 1. Clone the repository:
    ```bash
    git clone https://github.com/johannesroesner/leaf-library-frontend
-
    ```
 2. Navigate to the directory:
 
    ```bash
    cd leaf-library-frontend
-
    ```
 
 3. Create a `.env` file in the root directory based on the example file and adjust the environment variables as needed.
 
    ```text
    GITHUB_CLIENT_ID=dummy
-
    ```
 
 4. Install dependencies::
 
    ```bash
    npm install
-
    ```
 
 5. Start the application:
