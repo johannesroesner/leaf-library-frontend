@@ -1,8 +1,9 @@
 import type { PlantType } from "$lib/types/leaf-library-types";
 
-export interface BackendResponse {
+export interface BackendResponse<T = void> {
   error: boolean;
   code: number;
+  data?: T;
 }
 
 export interface LoginPayload {

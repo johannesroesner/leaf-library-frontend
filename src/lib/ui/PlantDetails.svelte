@@ -1,9 +1,28 @@
 <script lang="ts">
-  import { BiomeArray, PlantTypeArray } from "$lib/types/leaf-library-types";
+  import {
+    type Biome,
+    BiomeArray,
+    type PlantType,
+    PlantTypeArray
+  } from "$lib/types/leaf-library-types";
   import ImageUploader from "./ImageUploader.svelte";
   import MapPicker from "$lib/ui/MapPicker.svelte";
 
+  type Props = {
+    submitButtonText: string;
+    title: string;
+    commonName?: string;
+    scientificName?: string;
+    note?: string;
+    latitude?: number;
+    longitude?: number;
+    type?: PlantType;
+    biome?: Biome;
+    images?: File[];
+  };
   let {
+    submitButtonText,
+    title,
     commonName = $bindable(""),
     scientificName = $bindable(""),
     note = $bindable(""),
@@ -11,11 +30,8 @@
     longitude = $bindable(0),
     type = $bindable(PlantTypeArray[0]),
     biome = $bindable(BiomeArray[0]),
-    images = $bindable([]),
-    onSubmit,
-    submitButtonText,
-    title
-  } = $props();
+    images = $bindable([])
+  }: Props = $props();
 
   const allFieldsFilled = $derived(
     commonName.trim() !== "" &&
@@ -34,6 +50,7 @@
     <div class="flex flex-1 flex-col gap-2">
       <label class="label" for="common-name">Common Name</label>
       <input
+        name="commonName"
         id="common-name"
         bind:value={commonName}
         type="text"
@@ -44,6 +61,7 @@
 
       <label class="label" for="scientific-name">Scientific Name</label>
       <input
+        name="scientificName"
         id="scientific-name"
         bind:value={scientificName}
         type="text"
@@ -55,17 +73,17 @@
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="label" for="plant-type">Plant Type</label>
-          <select id="plant-type" bind:value={type} class="select w-full">
-            {#each PlantTypeArray as type (type)}
-              <option value={type}>{type}</option>
+          <select name="plantType" id="plant-type" bind:value={type} class="select w-full">
+            {#each PlantTypeArray as t (t)}
+              <option value={t}>{t}</option>
             {/each}
           </select>
         </div>
         <div>
           <label class="label" for="biome">Biome</label>
-          <select id="biome" bind:value={biome} class="select w-full">
-            {#each BiomeArray as biome (biome)}
-              <option value={biome}>{biome}</option>
+          <select name="biome" id="biome" bind:value={biome} class="select w-full">
+            {#each BiomeArray as b (b)}
+              <option value={b}>{b}</option>
             {/each}
           </select>
         </div>
@@ -73,6 +91,7 @@
         <div class="col-span-2 flex flex-col gap-2">
           <label class="label" for="note">Note</label>
           <textarea
+            name="note"
             id="note"
             bind:value={note}
             class="textarea h-24 w-full"
@@ -89,7 +108,7 @@
   </div>
 
   <div class="mt-6 flex justify-end">
-    <button class="btn px-8 btn-primary" onclick={onSubmit} disabled={!isFormValid}>
+    <button class="btn px-8 btn-primary" type="submit" disabled={!isFormValid}>
       {submitButtonText}
     </button>
   </div>

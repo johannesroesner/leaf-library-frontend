@@ -2,7 +2,12 @@
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
 
-  let { text, type } = $props();
+  interface Props {
+    text: string;
+    type: "error" | "success";
+  }
+  let { text, type }: Props = $props();
+
   let visible = $state(true);
 
   onMount(() => {

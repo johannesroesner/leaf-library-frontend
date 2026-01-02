@@ -1,82 +1,51 @@
 <script lang="ts">
-  import { leafLibraryService } from "$lib/services/leaf-library-service.js";
   import PlantDetails from "$lib/ui/PlantDetails.svelte";
-  import { BiomeArray, PlantTypeArray } from "$lib/types/leaf-library-types.js";
   import Toast from "$lib/ui/Toast.svelte";
+  import { enhance } from "$app/forms";
+  import type { SubmitFunction } from "@sveltejs/kit";
+  import type { Plant } from "$lib/types/leaf-library-types";
 
-  let { mapEvent = null } = $props();
+  type Props = {
+    createEvent: (plant: Plant) => void;
+  };
+  let { createEvent }: Props = $props();
 
-  let commonName = $state("");
-  let scientificName = $state("");
-  let note = $state("");
-  let latitude = $state(0);
-  let longitude = $state(0);
-  let type = $state(PlantTypeArray[0]);
-  let biome = $state(BiomeArray[0]);
-
-  let images: File[] = $state([]);
-  let preparedImageUrls: string[] | null = [];
-
-  function resetForm() {
-    commonName = "";
-    scientificName = "";
-    note = "";
-    latitude = 0;
-    longitude = 0;
-    type = PlantTypeArray[0];
-    biome = BiomeArray[0];
-    images = [];
-    preparedImageUrls = [];
-  }
+  const handleCreationSuccess: SubmitFunction = () => {
+    return async ({ result, update }) => {
+      if (result.type === "success") {
+        if (result.data) {
+          if (createEvent) createEvent(result.data.data);
+          successMessage = result.data.successMessage as string;
+        }
+        await update();
+      } else if (result.type === "failure") {
+        if (result.data) {
+          errorMessage = result.data.errorMessage as string;
+        }
+        await update();
+      } else {
+        errorMessage = "Server error.";
+        await update();
+      }
+    };
+  };
 
   let errorMessage = $state("");
   let successMessage = $state("");
-
-  const onSubmit = async () => {
-    if (images.length > 0) {
-      for (const image of images) {
-        const url = await leafLibraryService.uploadImage(image);
-        preparedImageUrls!.push(url);
-      }
-    } else preparedImageUrls = null;
-
-    const newPlant = {
-      commonName,
-      scientificName,
-      note: note === "" ? null : note,
-      latitude,
-      longitude,
-      type,
-      biome,
-      imageUrls: preparedImageUrls
-    };
-
-    const response = await leafLibraryService.createPlantForUser(newPlant);
-    if (response.error) errorMessage = "Server error.";
-    else {
-      mapEvent(newPlant);
-      resetForm();
-      successMessage = "Plant successfully created!";
-    }
-  };
 
   const submitButtonText = "Create Plant";
   const title = "Create a new Plant";
 </script>
 
-<PlantDetails
-  bind:commonName
-  bind:scientificName
-  bind:note
-  bind:latitude
-  bind:longitude
-  bind:type
-  bind:biome
-  bind:images
-  {onSubmit}
-  {submitButtonText}
-  {title}
-/>
+<form
+  method="POST"
+  action="?/createPlant"
+  enctype="multipart/form-data"
+  use:enhance={handleCreationSuccess}
+  class="w-full"
+>
+  <PlantDetails {submitButtonText} {title} />
+</form>
 {#if successMessage}
   <Toast text={successMessage} type="success" />
 {/if}

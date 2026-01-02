@@ -1,6 +1,3 @@
-<script>
-</script>
-
 <footer class="mt-10 footer bg-base-100 p-10 text-neutral-content shadow-2xl sm:footer-horizontal">
   <aside>
     <svg

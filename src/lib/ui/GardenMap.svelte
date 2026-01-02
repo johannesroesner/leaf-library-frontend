@@ -10,7 +10,7 @@
   let map: Leaflet.Map;
   let markerGroup: Leaflet.LayerGroup;
 
-  function updateMarkers() {
+  export function updateMarkers() {
     if (!map || !L || !markerGroup) return;
 
     markerGroup.clearLayers();
@@ -46,7 +46,7 @@
     map = L.map(mapElement).setView([startPosition.latitude, startPosition.longitude], 8);
 
     const baseMaps = {
-      "Open Street Map": L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      Default: L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "© OpenStreetMap"
       }).addTo(map),
       Satellite: L.tileLayer(

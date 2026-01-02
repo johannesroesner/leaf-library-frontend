@@ -1,12 +1,17 @@
 <script lang="ts">
-  import { leafLibraryService } from "$lib/services/leaf-library-service.js";
   import Toast from "$lib/ui/Toast.svelte";
-  import { util } from "$lib/services/leaf-library-utils";
   import ImageDeleteBar from "$lib/ui/ImageDeleteBar.svelte";
   import type { Profile } from "$lib/types/leaf-library-types";
   import ProfileDetails from "$lib/ui/ProfileDetails.svelte";
+  import type { SubmitFunction } from "@sveltejs/kit";
+  import { enhance } from "$app/forms";
+  import type { Session } from "$lib/types/frontend-specific-types";
 
-  let { profile = $bindable() }: { profile: Profile } = $props();
+  type Props = {
+    profile: Profile;
+    updateEvent: (newSession: Session) => void;
+  };
+  let { profile = $bindable(), updateEvent }: Props = $props();
 
   let firstName = $derived(profile.firstName);
   let secondName = $derived(profile.secondName);
@@ -19,57 +24,49 @@
   let errorMessage = $state("");
   let successMessage = $state("");
 
-  const onSubmit = async () => {
-    if (image.length > 0) {
-      if (imageUrl) await leafLibraryService.deleteImage(util.getPublicIdFromImageUrl(imageUrl!));
-      imageUrl = await leafLibraryService.uploadImage(image[0]);
-    }
-    const response = await leafLibraryService.updateProfile({
-      _id: profile._id,
-      firstName,
-      secondName,
-      email,
-      aboutMe,
-      imageUrl,
-      role: profile.role
-    });
-    if (response.error) {
-      errorMessage = response.code === 409 ? "E-mail already in use." : "Server error.";
-    } else {
-      profile = {
-        ...profile,
-        firstName,
-        secondName,
-        email,
-        aboutMe,
-        imageUrl
-      };
-      successMessage = "Profile successfully updated!";
-    }
-  };
-
-  const removeImage = async (url: string) => {
-    await leafLibraryService.deleteImage(util.getPublicIdFromImageUrl(url));
-    profile.imageUrl = null;
-    await leafLibraryService.updateProfile(profile);
+  const handleUpdate: SubmitFunction = () => {
+    return async ({ result, update }) => {
+      if (result.type === "success") {
+        if (result.data) {
+          updateEvent(result.data.data as Session);
+          successMessage = result.data.successMessage as string;
+        }
+        await update();
+      } else if (result.type === "failure") {
+        if (result.data) {
+          errorMessage = result.data.errorMessage as string;
+        }
+        await update();
+      } else {
+        errorMessage = "Server error.";
+        await update();
+      }
+    };
   };
 
   const submitButtonText = "Update Profile";
   const title = "Update Profile Details";
 </script>
 
-<ImageDeleteBar imageUrls={imageUrl ? [imageUrl] : null} {removeImage} />
+<ImageDeleteBar imageUrls={imageUrl ? [imageUrl] : null} handle={handleUpdate} />
 
-<ProfileDetails
-  bind:firstName
-  bind:secondName
-  bind:email
-  bind:aboutMe
-  bind:image
-  {onSubmit}
-  {submitButtonText}
-  {title}
-/>
+<form
+  method="POST"
+  action="?/updateProfile"
+  enctype="multipart/form-data"
+  use:enhance={handleUpdate}
+  class="w-full"
+>
+  <ProfileDetails
+    bind:firstName
+    bind:secondName
+    bind:email
+    bind:aboutMe
+    bind:image
+    {submitButtonText}
+    {title}
+  />
+</form>
 {#if successMessage}
   <Toast text={successMessage} type="success" />
 {/if}

@@ -1,13 +1,16 @@
 <script lang="ts">
-  import { leafLibraryService } from "$lib/services/leaf-library-service.js";
   import PlantDetails from "$lib/ui/PlantDetails.svelte";
   import { type Plant } from "$lib/types/leaf-library-types.js";
   import Toast from "$lib/ui/Toast.svelte";
-  import { util } from "$lib/services/leaf-library-utils";
-  import { currentUser } from "$lib/runes.svelte";
   import ImageDeleteBar from "$lib/ui/ImageDeleteBar.svelte";
+  import { enhance } from "$app/forms";
+  import type { SubmitFunction } from "@sveltejs/kit";
 
-  let { plant = $bindable() }: { plant: Plant } = $props();
+  type Props = {
+    plant: Plant;
+    updateEvent?: (plant: Plant) => void;
+  };
+  let { plant = $bindable(), updateEvent }: Props = $props();
 
   let commonName = $derived(plant.commonName);
   let scientificName = $derived(plant.scientificName);
@@ -23,55 +26,52 @@
   let errorMessage = $state("");
   let successMessage = $state("");
 
-  const removeImage = async (url: string) => {
-    await leafLibraryService.deleteImage(util.getPublicIdFromImageUrl(url));
-    plant.imageUrls = plant.imageUrls!.filter((u) => u !== url);
-    await leafLibraryService.updatePlant(plant);
-  };
-
-  const onSubmit = async () => {
-    for (const image of images) {
-      const url = await leafLibraryService.uploadImage(image);
-      if (!preparedImageUrls) preparedImageUrls = [];
-      preparedImageUrls!.push(url);
-    }
-
-    const response = await leafLibraryService.updatePlant({
-      _id: plant._id,
-      commonName,
-      scientificName,
-      note: note === "" ? null : note,
-      latitude,
-      longitude,
-      type,
-      biome,
-      imageUrls: preparedImageUrls,
-      date: plant.date,
-      userId: currentUser.id
-    });
-    if (response.error) errorMessage = "Server error.";
-    else successMessage = "Plant successfully updated!";
+  const handleUpdate: SubmitFunction = () => {
+    return async ({ result, update }) => {
+      if (result.type === "success") {
+        if (result.data) {
+          if (updateEvent) updateEvent(result.data.data as Plant);
+          successMessage = result.data.successMessage as string;
+        }
+        await update();
+      } else if (result.type === "failure") {
+        if (result.data) {
+          errorMessage = result.data.errorMessage as string;
+        }
+        await update();
+      } else {
+        errorMessage = "Server error.";
+        await update();
+      }
+    };
   };
 
   const submitButtonText = "Update Plant";
   const title = "Update Plant Details";
 </script>
 
-<ImageDeleteBar imageUrls={preparedImageUrls} {removeImage} />
+<ImageDeleteBar imageUrls={preparedImageUrls} handle={handleUpdate} />
 
-<PlantDetails
-  bind:commonName
-  bind:scientificName
-  bind:note
-  bind:latitude
-  bind:longitude
-  bind:type
-  bind:biome
-  bind:images
-  {onSubmit}
-  {submitButtonText}
-  {title}
-/>
+<form
+  method="POST"
+  action="?/updatePlant"
+  enctype="multipart/form-data"
+  use:enhance={handleUpdate}
+  class="w-full"
+>
+  <PlantDetails
+    bind:commonName
+    bind:scientificName
+    bind:note
+    bind:latitude
+    bind:longitude
+    bind:type
+    bind:biome
+    bind:images
+    {submitButtonText}
+    {title}
+  />
+</form>
 
 {#if successMessage}
   <Toast text={successMessage} type="success" />

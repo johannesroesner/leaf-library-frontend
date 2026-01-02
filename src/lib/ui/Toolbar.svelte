@@ -1,5 +1,11 @@
 <script lang="ts">
-  let { updateStatus = $bindable(false), deleteFunction = null } = $props();
+  import { enhance } from "$app/forms";
+
+  interface Props {
+    updateStatus?: boolean;
+    deleteAction?: string | null;
+  }
+  let { updateStatus = $bindable(false), deleteAction = null }: Props = $props();
 
   function goBack() {
     history.back();
@@ -10,11 +16,13 @@
 </script>
 
 <div class="mb-5 flex items-center justify-between">
-  <button class="btn btn-neutral" onclick={goBack}> Back </button>
+  <button class="btn btn-neutral" type="button" onclick={goBack}> Back </button>
   <div class="space-x-2">
-    <button class="btn btn-neutral" onclick={setUpdateStatus}> Update </button>
-    {#if deleteFunction}
-      <button class="btn btn-error" onclick={deleteFunction}> Delete </button>
+    <button class="btn btn-neutral" type="submit" onclick={setUpdateStatus}> Update </button>
+    {#if deleteAction}
+      <form action={deleteAction} method="POST" use:enhance class="inline">
+        <button type="submit" class="btn btn-error"> Delete </button>
+      </form>
     {/if}
   </div>
 </div>

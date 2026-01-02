@@ -1,14 +1,21 @@
 <script lang="ts">
   import ImageUploader from "$lib/ui/ImageUploader.svelte";
 
+  type Props = {
+    submitButtonText: string;
+    title: string;
+    name?: string;
+    description?: string;
+    image?: File[];
+  };
+
   let {
+    submitButtonText,
+    title,
     name = $bindable(""),
     description = $bindable(""),
-    image = $bindable([]),
-    onSubmit,
-    submitButtonText,
-    title
-  } = $props();
+    image = $bindable([])
+  }: Props = $props();
 
   const allFieldsFilled = $derived(name.trim() !== "" && description.trim() !== "");
 </script>
@@ -22,6 +29,7 @@
       <div>
         <label class="label" for="name">Name</label>
         <input
+          name="name"
           id="name"
           bind:value={name}
           type="text"
@@ -33,6 +41,7 @@
       <div>
         <label class="label" for="description">Description</label>
         <input
+          name="description"
           id="description"
           bind:value={description}
           type="text"
@@ -46,7 +55,7 @@
       <ImageUploader bind:images={image} multiple={false} />
     </div>
   </div>
-  <button class="btn mt-6 w-full btn-primary" onclick={onSubmit} disabled={!allFieldsFilled}>
+  <button class="btn mt-6 w-full btn-primary" type="submit" disabled={!allFieldsFilled}>
     {submitButtonText}
   </button>
 </fieldset>

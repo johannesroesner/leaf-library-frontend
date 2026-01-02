@@ -9,7 +9,7 @@
     Leaf Library is your personal digital botanical garden. By signing up, you'll be just moments
     away from starting your own garden.
   </p>
-  <button class="btn btn-primary" onclick={() => goto("login")}> Login </button>
+  <button class="btn btn-primary" type="button" onclick={() => goto("login")}> Login </button>
   <button class="btn btn-primary" onclick={() => goto("/signup")}> Sign up </button>
   <button class="btn btn-neutral" onclick={() => (window.location.href = "/auth/login/github")}>
     <svg

@@ -1,11 +1,8 @@
 <script lang="ts">
-  let {
-    firstName = $bindable(""),
-    secondName = $bindable(""),
-    email = $bindable(""),
-    password = $bindable(""),
-    onSubmit
-  } = $props();
+  let firstName = $state("");
+  let secondName = $state("");
+  let email = $state("");
+  let password = $state("");
   let confirmPassword = $state("");
 
   const allFieldsFilled = $derived(
@@ -19,8 +16,15 @@
   const isEmailValid = $derived(emailRegex.test(email));
   const isPasswordMatching = $derived(password === confirmPassword);
   const isPasswordLengthValid = $derived(password.length >= 8);
+  const hasNoSpacesInFirstName = $derived(!firstName.includes(" "));
+  const hasNoSpacesInSecondName = $derived(!secondName.includes(" "));
   const isFormValid = $derived(
-    allFieldsFilled && isPasswordMatching && isPasswordLengthValid && isEmailValid
+    allFieldsFilled &&
+      isPasswordMatching &&
+      isPasswordLengthValid &&
+      isEmailValid &&
+      hasNoSpacesInFirstName &&
+      hasNoSpacesInSecondName
   );
 </script>
 
@@ -29,6 +33,7 @@
 
   <label class="label" for="first-name">First Name</label>
   <input
+    name="firstName"
     id="first-name"
     bind:value={firstName}
     type="text"
@@ -37,8 +42,13 @@
     required
   />
 
+  {#if firstName && !hasNoSpacesInFirstName}
+    <p class="mt-2 text-center text-xs text-error">First name cannot contain spaces</p>
+  {/if}
+
   <label class="label" for="second-name">Second Name</label>
   <input
+    name="secondName"
     id="second-name"
     bind:value={secondName}
     type="text"
@@ -47,8 +57,20 @@
     required
   />
 
+  {#if secondName && !hasNoSpacesInSecondName}
+    <p class="mt-2 text-center text-xs text-error">Second name cannot contain spaces</p>
+  {/if}
+
   <label class="label" for="email">E-mail</label>
-  <input id="email" bind:value={email} type="email" class="input" placeholder="E-mail" required />
+  <input
+    name="email"
+    id="email"
+    bind:value={email}
+    type="email"
+    class="input"
+    placeholder="E-mail"
+    required
+  />
 
   {#if allFieldsFilled && !isEmailValid}
     <p class="mt-2 text-center text-xs text-error">E-mail is invalid</p>
@@ -56,6 +78,7 @@
 
   <label class="label" for="password">Password</label>
   <input
+    name="password"
     id="password"
     bind:value={password}
     type="password"
@@ -82,7 +105,7 @@
     <p class="mt-2 text-center text-xs text-error">Passwords do not match</p>
   {/if}
 
-  <button class="btn mt-4 btn-neutral" onclick={onSubmit} disabled={!isFormValid}>Sign up</button>
+  <button class="btn mt-4 btn-neutral" type="submit" disabled={!isFormValid}>Sign up</button>
 
   <p class="mt-4 text-center text-sm text-base-content/70">
     Already have an account?

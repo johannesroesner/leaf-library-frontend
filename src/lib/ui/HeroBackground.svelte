@@ -1,6 +1,11 @@
 <script lang="ts">
   import heroImage from "$lib/assets/digital-garden.png";
-  let { children } = $props();
+  import type { Snippet } from "svelte";
+
+  interface Props {
+    children: Snippet;
+  }
+  let { children }: Props = $props();
 </script>
 
 <div class="hero min-h-screen" style="background-image: url({heroImage});">

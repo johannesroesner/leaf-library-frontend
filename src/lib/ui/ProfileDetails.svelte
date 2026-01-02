@@ -1,20 +1,33 @@
 <script lang="ts">
   import ImageUploader from "$lib/ui/ImageUploader.svelte";
 
+  interface Props {
+    firstName?: string;
+    secondName?: string;
+    email?: string;
+    aboutMe?: string;
+    image?: File[];
+    submitButtonText: string;
+    title: string;
+  }
   let {
     firstName = $bindable(""),
     secondName = $bindable(""),
     email = $bindable(""),
     aboutMe = $bindable(""),
     image = $bindable([]),
-    onSubmit,
     submitButtonText,
     title
-  } = $props();
+  }: Props = $props();
 
   const allFieldsFilled = $derived(
     firstName.trim() !== "" && secondName.trim() !== "" && email.trim() !== ""
   );
+
+  const firstNameHasNoSpaces = $derived(/^\S*$/.test(firstName));
+  const secondNameHasNoSpaces = $derived(/^\S*$/.test(secondName));
+
+  const isFormValid = $derived(allFieldsFilled && firstNameHasNoSpaces && secondNameHasNoSpaces);
 </script>
 
 <fieldset
@@ -26,6 +39,7 @@
       <div>
         <label class="label" for="first-name">First Name</label>
         <input
+          name="firstName"
           id="first-name"
           bind:value={firstName}
           type="text"
@@ -33,10 +47,14 @@
           placeholder="First Name"
           required
         />
+        {#if !firstNameHasNoSpaces}
+          <p class="mt-2 text-xs text-error">First name cannot contain spaces</p>
+        {/if}
       </div>
       <div>
         <label class="label" for="second-name">Second Name</label>
         <input
+          name="secondName"
           id="second-name"
           bind:value={secondName}
           type="text"
@@ -44,11 +62,15 @@
           placeholder="Second Name"
           required
         />
+        {#if !secondNameHasNoSpaces}
+          <p class="mt-2 text-xs text-error">Second name cannot contain spaces</p>
+        {/if}
       </div>
 
       <div>
         <label class="label" for="email">E-mail</label>
         <input
+          name="email"
           id="email"
           bind:value={email}
           type="text"
@@ -61,6 +83,7 @@
       <div>
         <label class="label" for="about-me">About Me</label>
         <input
+          name="aboutMe"
           id="about-me"
           bind:value={aboutMe}
           type="text"
@@ -73,7 +96,7 @@
       <ImageUploader bind:images={image} multiple={false} />
     </div>
   </div>
-  <button class="btn mt-6 w-full btn-primary" onclick={onSubmit} disabled={!allFieldsFilled}>
+  <button class="btn mt-6 w-full btn-primary" type="submit" disabled={!isFormValid}>
     {submitButtonText}
   </button>
 </fieldset>

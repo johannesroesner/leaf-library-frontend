@@ -1,6 +1,20 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
+  import { enhance } from "$app/forms";
+  import type { SubmitFunction } from "@sveltejs/kit";
 
+  interface Props {
+    images?: string[];
+    commonName: string;
+    scientificName: string;
+    type: string;
+    biome: string;
+    note?: string;
+    id: string;
+    plantFunctionAction?: string;
+    plantFunctionKey?: string;
+    handle?: SubmitFunction;
+    mapEvent?: ((id: string) => void) | null;
+  }
   let {
     images,
     commonName,
@@ -9,17 +23,18 @@
     biome,
     note,
     id,
-    plantFunction,
+    plantFunctionAction,
     plantFunctionKey,
+    handle,
     mapEvent = null
-  } = $props();
+  }: Props = $props();
 </script>
 
 <div
   class="hover-3d card w-63 rounded-2xl bg-base-300 shadow-2xl card-xs"
-  onclick={() => mapEvent(id)}
+  onclick={() => mapEvent?.(id)}
   onkeydown={() => {
-    mapEvent(id);
+    mapEvent?.(id);
   }}
   role="button"
   tabindex="0"
@@ -59,10 +74,13 @@
           <div class="badge badge-secondary">{type}</div>
           <div class="badge badge-secondary">{biome}</div>
         </div>
-        {#if plantFunction && plantFunctionKey}
-          <button class="btn btn-primary" onclick={() => plantFunction?.(id)}>
-            {plantFunctionKey}
-          </button>
+        {#if plantFunctionAction && plantFunctionKey}
+          <form method="post" action={plantFunctionAction} use:enhance={handle}>
+            <input type="hidden" name="plantId" value={id} />
+            <button class="btn btn-primary" type="submit">
+              {plantFunctionKey}
+            </button>
+          </form>
         {/if}
       </div>
 
@@ -71,7 +89,11 @@
       {/if}
 
       <div class="mt-4 card-actions justify-end">
-        <button class="btn btn-xs btn-primary" onclick={() => goto(`/plants/${id}`)}>
+        <button
+          class="btn btn-xs btn-primary"
+          type="button"
+          onclick={() => (window.location.href = `/plants/${id}`)}
+        >
           Details
         </button>
       </div>

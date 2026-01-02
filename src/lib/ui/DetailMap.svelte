@@ -4,7 +4,12 @@
   import { onMount } from "svelte";
   import { leafletService } from "$lib/services/leaflet-service.js";
 
-  let { latitude, longitude, mapType } = $props();
+  interface Props {
+    latitude: number;
+    longitude: number;
+    mapType: "default" | "topography";
+  }
+  let { latitude, longitude, mapType }: Props = $props();
 
   let L: typeof Leaflet;
   let mapElement: HTMLElement;

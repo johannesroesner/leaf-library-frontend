@@ -13,22 +13,23 @@ import type {
   LoginPayload,
   Session
 } from "$lib/types/frontend-specific-types";
-import { util } from "$lib/services/leaf-library-utils";
 import { currentUser } from "$lib/runes.svelte";
 
 export const leafLibraryService = {
   baseUrl: "https://leaf-library-backend.onrender.com",
 
-  async authenticateViaGithub(gitHubOAuthRequest: GitHubOAuthRequest): Promise<BackendResponse> {
+  async authenticateViaGithub(
+    gitHubOAuthRequest: GitHubOAuthRequest
+  ): Promise<BackendResponse<Session>> {
     try {
       const response = await axios.post(`${this.baseUrl}/api/auth/github`, gitHubOAuthRequest);
       if (response.status === 201) {
         const loginData = response.data as Session;
         if (loginData.success) {
-          await util.saveSession(loginData);
           return {
             error: false,
-            code: response.status
+            code: response.status,
+            data: loginData
           };
         }
       }
@@ -59,16 +60,16 @@ export const leafLibraryService = {
     }
   },
 
-  async login(loginPayload: LoginPayload): Promise<BackendResponse> {
+  async login(loginPayload: LoginPayload): Promise<BackendResponse<Session>> {
     try {
       const response = await axios.post(`${this.baseUrl}/api/users/authenticate`, loginPayload);
       if (response.status === 201) {
         const loginData = response.data as Session;
         if (loginData.success) {
-          await util.saveSession(loginData);
           return {
             error: false,
-            code: response.status
+            code: response.status,
+            data: loginData
           };
         }
       }
@@ -84,10 +85,10 @@ export const leafLibraryService = {
     }
   },
 
-  async getAllPlantsForUser(): Promise<Plant[]> {
-    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+  async getAllPlantsForUser(session: Session): Promise<Plant[]> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + session.token;
     try {
-      const response = await axios.get(`${this.baseUrl}/api/users/${currentUser.id}/plants`);
+      const response = await axios.get(`${this.baseUrl}/api/users/${session._id}/plants`);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -103,10 +104,10 @@ export const leafLibraryService = {
         newPlant
       );
       if (response.status === 201) {
-        await util.updateData();
         return {
           error: false,
-          code: response.status
+          code: response.status,
+          data: response.data
         };
       }
       return {
@@ -127,10 +128,10 @@ export const leafLibraryService = {
     try {
       const response = await axios.put(`${this.baseUrl}/api/plants/${plant._id}`, plant);
       if (response.status === 200) {
-        await util.updateData();
         return {
           error: false,
-          code: response.status
+          code: response.status,
+          data: response.data
         };
       }
       return {
@@ -151,7 +152,6 @@ export const leafLibraryService = {
     try {
       const response = await axios.delete(`${this.baseUrl}/api/plants/${plant._id}`);
       if (response.status === 204) {
-        await util.updateData();
         return {
           error: false,
           code: response.status
@@ -170,10 +170,10 @@ export const leafLibraryService = {
     }
   },
 
-  async getAllCollectionsForUser(): Promise<Collection[]> {
-    axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
+  async getAllCollectionsForUser(session: Session): Promise<Collection[]> {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + session.token;
     try {
-      const response = await axios.get(`${this.baseUrl}/api/users/${currentUser.id}/collections`);
+      const response = await axios.get(`${this.baseUrl}/api/users/${session._id}/collections`);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -181,10 +181,10 @@ export const leafLibraryService = {
     }
   },
 
-  async getAllPlantsForCollection(collection: Collection): Promise<Plant[]> {
+  async getAllPlantsForCollection(collectionId: string): Promise<Plant[]> {
     axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
     try {
-      const response = await axios.get(`${this.baseUrl}/api/collections/${collection._id}/plants`);
+      const response = await axios.get(`${this.baseUrl}/api/collections/${collectionId}/plants`);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -192,18 +192,13 @@ export const leafLibraryService = {
     }
   },
 
-  async removePlantFromCollection(
-    collection: Collection,
-    plantId: string
-  ): Promise<BackendResponse> {
+  async removePlantFromCollection(collectionId: string, plantId: string): Promise<BackendResponse> {
     axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
     try {
       const response = await axios.delete(
-        `${this.baseUrl}/api/collections/${collection._id}/deletePlant/${plantId}`
+        `${this.baseUrl}/api/collections/${collectionId}/deletePlant/${plantId}`
       );
       if (response.status === 204) {
-        await util.updateData();
-        await util.updateData();
         return {
           error: false,
           code: response.status
@@ -222,15 +217,13 @@ export const leafLibraryService = {
     }
   },
 
-  async addPlantToCollection(collection: Collection, plantId: string): Promise<BackendResponse> {
+  async addPlantToCollection(collectionId: string, plantId: string): Promise<BackendResponse> {
     axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
     try {
       const response = await axios.post(
-        `${this.baseUrl}/api/collections/${collection._id}/addPlant/${plantId}`
+        `${this.baseUrl}/api/collections/${collectionId}/addPlant/${plantId}`
       );
       if (response.status === 201) {
-        await util.updateData();
-        await util.updateData();
         return {
           error: false,
           code: response.status
@@ -257,10 +250,10 @@ export const leafLibraryService = {
         newCollection
       );
       if (response.status === 201) {
-        await util.updateData();
         return {
           error: false,
-          code: response.status
+          code: response.status,
+          data: response.data
         };
       }
       return {
@@ -281,7 +274,6 @@ export const leafLibraryService = {
     try {
       const response = await axios.delete(`${this.baseUrl}/api/collections/${collection._id}`);
       if (response.status === 204) {
-        await util.updateData();
         return {
           error: false,
           code: response.status
@@ -308,10 +300,10 @@ export const leafLibraryService = {
         collection
       );
       if (response.status === 200) {
-        await util.updateData();
         return {
           error: false,
-          code: response.status
+          code: response.status,
+          data: response.data
         };
       }
       return {
@@ -327,26 +319,25 @@ export const leafLibraryService = {
     }
   },
 
-  async updateProfile(profile: Profile): Promise<BackendResponse> {
+  async updateProfile(profile: Profile): Promise<BackendResponse<Session>> {
     axios.defaults.headers.common["Authorization"] = "Bearer " + currentUser.token;
     try {
       const response = await axios.put(`${this.baseUrl}/api/users/${profile._id}`, profile);
       const newProfile = response.data as Profile;
-      await util.saveSession({
-        success: true,
-        token: currentUser.token,
-        _id: newProfile._id,
-        email: newProfile.email,
-        role: newProfile.role,
-        name: newProfile.firstName + " " + newProfile.secondName,
-        imageUrl: newProfile.imageUrl,
-        aboutMe: newProfile.aboutMe
-      });
       if (response.status === 200) {
-        await util.updateData();
         return {
           error: false,
-          code: response.status
+          code: response.status,
+          data: {
+            success: true,
+            token: currentUser.token,
+            _id: newProfile._id,
+            email: newProfile.email,
+            role: newProfile.role,
+            name: newProfile.firstName + " " + newProfile.secondName,
+            imageUrl: newProfile.imageUrl,
+            aboutMe: newProfile.aboutMe
+          }
         };
       }
       return {
