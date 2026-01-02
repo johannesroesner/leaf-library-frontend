@@ -6,10 +6,8 @@ export const load: LayoutServerLoad = async ({ url, cookies }) => {
   const cookieStr = cookies.get("leafLibrary") as string;
   console.log("Layout load - path:", url.pathname, "cookie exists:", !!cookieStr);
 
-
   let sessionData: Session | null = null;
   if (cookieStr) sessionData = JSON.parse(cookieStr) as Session;
-
 
   const publicRoutes = ["/", "/login", "/signup", "/auth/login/github", "/auth/callback/github"];
   const isPublic = publicRoutes.includes(url.pathname);

@@ -18,7 +18,9 @@ import { currentUser } from "$lib/runes.svelte";
 export const leafLibraryService = {
   baseUrl: "http://localhost:3000",
 
-  async authenticateViaGithub(gitHubOAuthRequest: GitHubOAuthRequest): Promise<BackendResponse<Session>> {
+  async authenticateViaGithub(
+    gitHubOAuthRequest: GitHubOAuthRequest
+  ): Promise<BackendResponse<Session>> {
     try {
       const response = await axios.post(`${this.baseUrl}/api/auth/github`, gitHubOAuthRequest);
       if (response.status === 201) {
