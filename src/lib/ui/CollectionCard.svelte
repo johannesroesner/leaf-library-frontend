@@ -35,7 +35,9 @@
     </p>
 
     <div class="card-actions justify-end">
-      <button class="btn btn-primary" onclick={() => goto(`/collections/${id}`)}> Details </button>
+      <button class="btn btn-primary" type="button" onclick={() => goto(`/collections/${id}`)}>
+        Details
+      </button>
     </div>
   </div>
 </div>

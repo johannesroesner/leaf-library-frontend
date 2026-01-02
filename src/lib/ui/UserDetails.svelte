@@ -16,8 +16,15 @@
   const isEmailValid = $derived(emailRegex.test(email));
   const isPasswordMatching = $derived(password === confirmPassword);
   const isPasswordLengthValid = $derived(password.length >= 8);
+  const hasNoSpacesInFirstName = $derived(!firstName.includes(" "));
+  const hasNoSpacesInSecondName = $derived(!secondName.includes(" "));
   const isFormValid = $derived(
-    allFieldsFilled && isPasswordMatching && isPasswordLengthValid && isEmailValid
+    allFieldsFilled &&
+      isPasswordMatching &&
+      isPasswordLengthValid &&
+      isEmailValid &&
+      hasNoSpacesInFirstName &&
+      hasNoSpacesInSecondName
   );
 </script>
 
@@ -35,6 +42,10 @@
     required
   />
 
+  {#if firstName && !hasNoSpacesInFirstName}
+    <p class="mt-2 text-center text-xs text-error">First name cannot contain spaces</p>
+  {/if}
+
   <label class="label" for="second-name">Second Name</label>
   <input
     name="secondName"
@@ -45,6 +56,10 @@
     placeholder="Second Name"
     required
   />
+
+  {#if secondName && !hasNoSpacesInSecondName}
+    <p class="mt-2 text-center text-xs text-error">Second name cannot contain spaces</p>
+  {/if}
 
   <label class="label" for="email">E-mail</label>
   <input
@@ -90,7 +105,7 @@
     <p class="mt-2 text-center text-xs text-error">Passwords do not match</p>
   {/if}
 
-  <button class="btn mt-4 btn-neutral" disabled={!isFormValid}>Sign up</button>
+  <button class="btn mt-4 btn-neutral" type="submit" disabled={!isFormValid}>Sign up</button>
 
   <p class="mt-4 text-center text-sm text-base-content/70">
     Already have an account?

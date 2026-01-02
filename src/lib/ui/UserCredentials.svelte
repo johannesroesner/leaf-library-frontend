@@ -32,7 +32,7 @@
     name="password"
   />
 
-  <button class="btn mt-4 btn-neutral" disabled={!isFormValid}>Login</button>
+  <button class="btn mt-4 btn-neutral" type="submit" disabled={!isFormValid}>Login</button>
 
   <p class="mt-4 text-center text-sm text-base-content/70">
     Don't have an account yet?

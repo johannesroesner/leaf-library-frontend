@@ -109,7 +109,7 @@
   </div>
 
   <div class="mt-6 flex justify-end">
-    <button class="btn px-8 btn-primary" disabled={!isFormValid}>
+    <button class="btn px-8 btn-primary" type="submit" disabled={!isFormValid}>
       {submitButtonText}
     </button>
   </div>

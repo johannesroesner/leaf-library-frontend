@@ -55,7 +55,7 @@
       <ImageUploader bind:images={image} multiple={false} />
     </div>
   </div>
-  <button class="btn mt-6 w-full btn-primary" disabled={!allFieldsFilled}>
+  <button class="btn mt-6 w-full btn-primary" type="submit" disabled={!allFieldsFilled}>
     {submitButtonText}
   </button>
 </fieldset>
