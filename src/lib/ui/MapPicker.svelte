@@ -4,7 +4,11 @@
   import "leaflet/dist/leaflet.css";
   import { leafletService } from "$lib/services/leaflet-service.js";
 
-  let { latitude = $bindable(), longitude = $bindable() } = $props();
+  interface Props {
+    latitude?: number;
+    longitude?: number;
+  }
+  let { latitude = $bindable(), longitude = $bindable() }: Props = $props();
 
   let mapElement: HTMLElement;
   let map: Leaflet.Map;
@@ -20,12 +24,10 @@
 
     map = L.map(mapElement).setView([startPosition.latitude, startPosition.longitude], 8);
 
-    L.tileLayer("https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png", {
-      attribution:
-        '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap"
     }).addTo(map);
 
-    // credits for the colored marker icons: https://github.com/pointhi/leaflet-color-markers
     const redIcon = new L.Icon({
       iconUrl:
         "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",

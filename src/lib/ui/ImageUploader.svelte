@@ -1,5 +1,9 @@
 <script lang="ts">
-  let { images = $bindable([]), multiple = true } = $props();
+  interface Props {
+    images?: File[];
+    multiple?: boolean;
+  }
+  let { images = $bindable([]), multiple = true }: Props = $props();
 
   let imagePreviews = $state<string[]>([]);
 
@@ -49,7 +53,7 @@
             class="h-20 w-20 rounded-lg border border-base-300 object-cover"
           />
           <button
-            type="button"
+            type="submit"
             class="btn absolute -top-2 -right-2 btn-circle transition-opacity btn-xs btn-error"
             onclick={() => removeImage(index)}>✕</button
           >

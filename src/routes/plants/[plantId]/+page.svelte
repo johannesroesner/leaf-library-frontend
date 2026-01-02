@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { currentPlants } from "$lib/runes.svelte.js";
+  import { currentPage, currentPlants } from "$lib/runes.svelte.js";
   import Toast from "$lib/ui/Toast.svelte";
   import PlantInfo from "$lib/ui/PlantInfo.svelte";
   import PlantImageCarousel from "$lib/ui/PlantImageCarousel.svelte";
@@ -9,6 +9,8 @@
   import { util } from "$lib/services/leaf-library-utils";
   import DetailMap from "$lib/ui/DetailMap.svelte";
   import type { Plant } from "$lib/types/leaf-library-types";
+
+  currentPage.title = "Plant Details";
 
   type Props = {
     data: {

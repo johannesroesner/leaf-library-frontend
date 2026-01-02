@@ -5,6 +5,9 @@
   import type { Plant } from "$lib/types/leaf-library-types.js";
   import type { Collection } from "$lib/types/leaf-library-types.js";
   import { util } from "$lib/services/leaf-library-utils.js";
+  import { currentPage } from "$lib/runes.svelte";
+
+  currentPage.title = "Charts";
 
   type Props = {
     data: {

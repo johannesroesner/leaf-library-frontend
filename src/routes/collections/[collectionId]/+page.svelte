@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { currentCollections, currentPlants } from "$lib/runes.svelte";
+  import { currentCollections, currentPage, currentPlants } from "$lib/runes.svelte";
   import { page } from "$app/state";
   import type { Collection, Plant } from "$lib/types/leaf-library-types";
   import PlantList from "$lib/ui/PlantList.svelte";
@@ -10,6 +10,8 @@
   import { invalidateAll } from "$app/navigation";
   import CollectionForm from "./CollectionForm.svelte";
   import type { SubmitFunction } from "@sveltejs/kit";
+
+  currentPage.title = "Collection Details";
 
   type Props = {
     data: {

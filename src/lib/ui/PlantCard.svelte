@@ -15,7 +15,6 @@
     handle?: SubmitFunction;
     mapEvent?: ((id: string) => void) | null;
   }
-
   let {
     images,
     commonName,
@@ -92,6 +91,7 @@
       <div class="mt-4 card-actions justify-end">
         <button
           class="btn btn-xs btn-primary"
+          type="button"
           onclick={() => (window.location.href = `/plants/${id}`)}
         >
           Details
