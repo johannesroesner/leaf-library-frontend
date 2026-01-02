@@ -3,7 +3,10 @@
   import UserCredentials from "$lib/ui/UserCredentials.svelte";
   import Toast from "$lib/ui/Toast.svelte";
 
-  let { form } = $props();
+  interface Props {
+    form?: { message?: string } | null;
+  }
+  let { form }: Props = $props();
 </script>
 
 <HeroBackground>
@@ -11,7 +14,7 @@
     <UserCredentials />
 
     {#if form?.message}
-      <Toast text={form?.message} type="error" />
+      <Toast text={form.message} type="error" />
     {/if}
   </form>
 </HeroBackground>

@@ -1,7 +1,10 @@
 <script lang="ts">
   import type { Profile } from "$lib/types/leaf-library-types";
 
-  let { profile }: { profile: Profile } = $props();
+  interface Props {
+    profile: Profile;
+  }
+  let { profile }: Props = $props();
 </script>
 
 <div class="flex items-center justify-around gap-10">

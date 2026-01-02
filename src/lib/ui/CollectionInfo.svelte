@@ -1,8 +1,13 @@
 <script lang="ts">
-  let { collection } = $props();
+  import type { Collection } from "$lib/types/leaf-library-types";
+
+  interface Props {
+    collection: Collection;
+  }
+  let { collection }: Props = $props();
 </script>
 
-<div class=" overflow-y-auto p-6">
+<div class="overflow-y-auto p-6">
   <h2 class="mb-4 text-2xl font-bold">{collection.name}</h2>
   {#if collection.imageUrl}
     <img

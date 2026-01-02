@@ -20,7 +20,6 @@
     biome?: Biome;
     images?: File[];
   };
-
   let {
     submitButtonText,
     title,

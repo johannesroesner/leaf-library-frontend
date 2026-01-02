@@ -1,5 +1,9 @@
 <script lang="ts">
-  let { images = $bindable([]), multiple = true } = $props();
+  interface Props {
+    images?: File[];
+    multiple?: boolean;
+  }
+  let { images = $bindable([]), multiple = true }: Props = $props();
 
   let imagePreviews = $state<string[]>([]);
 

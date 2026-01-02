@@ -1,6 +1,15 @@
 <script lang="ts">
   import ImageUploader from "$lib/ui/ImageUploader.svelte";
 
+  interface Props {
+    firstName?: string;
+    secondName?: string;
+    email?: string;
+    aboutMe?: string;
+    image?: File[];
+    submitButtonText: string;
+    title: string;
+  }
   let {
     firstName = $bindable(""),
     secondName = $bindable(""),
@@ -9,7 +18,7 @@
     image = $bindable([]),
     submitButtonText,
     title
-  } = $props();
+  }: Props = $props();
 
   const allFieldsFilled = $derived(
     firstName.trim() !== "" && secondName.trim() !== "" && email.trim() !== ""

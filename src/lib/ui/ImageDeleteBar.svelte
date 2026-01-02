@@ -6,7 +6,6 @@
     imageUrls: string[] | null;
     handle?: SubmitFunction;
   }
-
   let { imageUrls = [], handle }: Props = $props();
 </script>
 

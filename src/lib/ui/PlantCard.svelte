@@ -15,7 +15,6 @@
     handle?: SubmitFunction;
     mapEvent?: ((id: string) => void) | null;
   }
-
   let {
     images,
     commonName,

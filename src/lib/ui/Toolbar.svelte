@@ -1,7 +1,11 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
 
-  let { updateStatus = $bindable(false), deleteAction = null } = $props();
+  interface Props {
+    updateStatus?: boolean;
+    deleteAction?: string | null;
+  }
+  let { updateStatus = $bindable(false), deleteAction = null }: Props = $props();
 
   function goBack() {
     history.back();

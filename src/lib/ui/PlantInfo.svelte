@@ -1,7 +1,10 @@
 <script lang="ts">
   import type { Plant } from "$lib/types/leaf-library-types";
 
-  let { plant }: { plant: Plant } = $props();
+  interface Props {
+    plant: Plant;
+  }
+  let { plant }: Props = $props();
 </script>
 
 <div class="card h-full bg-base-100">
