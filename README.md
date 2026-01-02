@@ -4,6 +4,17 @@ A digital botanical garden built with _SvelteKit_ and _TypeScript_, consuming th
 
 For information about the backend data model and system architecture, see the [backend README](https://github.com/johannesroesner/leaf-library-backend)
 
+## Features
+
+- Browse and manage your personal garden of plants
+- Create custom collections to organize plants
+- Interactive map view for plant locations
+- User authentication via JWT
+- OAuth2 login support (GitHub)
+- Charts to visualize your plant data via Apache ECharts
+- Image upload support for plants, collections and user profiles
+- SSR with SvelteKit for optimal performance
+
 ## Impressions
 
 ### Landing Page
@@ -29,17 +40,6 @@ For information about the backend data model and system architecture, see the [b
 ### Charts View
 
 ![Charts](./docs/images/screen-6.png)
-
-## Features
-
-- Browse and manage your personal garden of plants
-- Create custom collections to organize plants
-- Interactive map view for plant locations
-- User authentication via JWT
-- OAuth2 login support (GitHub)
-- Charts to visualize your plant data via Apache ECharts
-- Image upload support for plants, collections and user profiles
-- SSR with SvelteKit for optimal performance
 
 ## Run Local
 
