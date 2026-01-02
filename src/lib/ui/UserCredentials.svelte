@@ -1,5 +1,6 @@
 <script lang="ts">
-  let { email = $bindable(""), password = $bindable(""), onSubmit } = $props();
+  let email = $state("");
+  let password = $state("");
 
   const allFieldsFilled = $derived(email.trim() !== "" && password.trim() !== "");
 
@@ -12,12 +13,26 @@
   <legend class="fieldset-legend">Login</legend>
 
   <label class="label" for="email">E-mail</label>
-  <input id="email" bind:value={email} type="email" class="input" placeholder="E-mail" />
+  <input
+    id="email"
+    bind:value={email}
+    type="email"
+    class="input"
+    placeholder="E-mail"
+    name="email"
+  />
 
   <label class="label" for="password">Password</label>
-  <input id="password" bind:value={password} type="password" class="input" placeholder="Password" />
+  <input
+    id="password"
+    bind:value={password}
+    type="password"
+    class="input"
+    placeholder="Password"
+    name="password"
+  />
 
-  <button class="btn mt-4 btn-neutral" onclick={onSubmit} disabled={!isFormValid}>Login</button>
+  <button class="btn mt-4 btn-neutral" disabled={!isFormValid}>Login</button>
 
   <p class="mt-4 text-center text-sm text-base-content/70">
     Don't have an account yet?
