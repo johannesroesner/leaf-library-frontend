@@ -20,7 +20,8 @@
         axisPointer: { type: "shadow" }
       },
       grid: {
-        left: "3%",
+        top: "25%",
+        left: "4%",
         right: "4%",
         bottom: "3%",
         containLabel: true
