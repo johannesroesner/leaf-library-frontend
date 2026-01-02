@@ -1,22 +1,8 @@
 import type { Session } from "$lib/types/frontend-specific-types";
-import Cookies from "js-cookie";
 import { currentCollections, currentPlants, currentUser } from "$lib/runes.svelte";
 import type { Collection, Plant } from "$lib/types/leaf-library-types";
 
 export const util = {
-  async saveSession(session: Session) {
-    console.log(JSON.stringify(session).length);
-    Cookies.set("leafLibrary", JSON.stringify(session), {
-      expires: 7,
-      path: "/",
-      sameSite: "strict"
-    });
-
-    const test = this.getCookieData();
-    console.log(test);
-    await this.updateUserRunes(session);
-  },
-
   clearSession() {
     this.updateUserRunes({ _id: "", role: "", name: "", email: "", token: "" } as Session);
     this.updateData([], []);
@@ -77,11 +63,6 @@ export const util = {
     currentPlants.plantsBiomeOther = currentPlants.plants.filter(
       (plant) => plant.biome === "Other"
     );
-  },
-
-  getCookieData(): Session | null {
-    const cookie = Cookies.get("leafLibrary");
-    return cookie ? JSON.parse(cookie) : null;
   },
 
   getPublicIdFromImageUrl(url: string): string {
