@@ -1,11 +1,13 @@
 <script lang="ts">
   import PlantList from "$lib/ui/PlantList.svelte";
-  import { currentPlants } from "$lib/runes.svelte";
+  import { currentPage, currentPlants } from "$lib/runes.svelte";
   import PlantForm from "./PlantForm.svelte";
   import GardenMap from "$lib/ui/GardenMap.svelte";
   import type { Plant } from "$lib/types/leaf-library-types";
   import PlantFilterBar from "$lib/ui/PlantFilterBar.svelte";
   import { util } from "$lib/services/leaf-library-utils";
+
+  currentPage.title = "Garden";
 
   type Props = {
     data: {

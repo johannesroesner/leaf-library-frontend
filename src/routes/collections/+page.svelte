@@ -1,9 +1,11 @@
 <script lang="ts">
   import CollectionList from "$lib/ui/CollectionList.svelte";
-  import { currentCollections } from "$lib/runes.svelte";
+  import { currentCollections, currentPage } from "$lib/runes.svelte";
   import CollectionForm from "./CollectionForm.svelte";
   import type { Collection } from "$lib/types/leaf-library-types";
   import { util } from "$lib/services/leaf-library-utils";
+
+  currentPage.title = "Collections";
 
   type Props = {
     data: {

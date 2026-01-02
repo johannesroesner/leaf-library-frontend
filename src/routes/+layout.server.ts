@@ -4,7 +4,6 @@ import type { Session } from "$lib/types/frontend-specific-types";
 
 export const load: LayoutServerLoad = async ({ url, cookies }) => {
   const cookieStr = cookies.get("leafLibrary") as string;
-  console.log("Layout load - path:", url.pathname, "cookie exists:", !!cookieStr);
 
   let sessionData: Session | null = null;
   if (cookieStr) sessionData = JSON.parse(cookieStr) as Session;

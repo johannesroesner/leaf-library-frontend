@@ -6,7 +6,7 @@ import {
 } from "$lib/types/leaf-library-types";
 import type { FilterType } from "$lib/types/frontend-specific-types";
 
-export const pageTitle = $state("Leaf Library");
+export const currentPage = $state({ title: "Leaf Library" });
 
 export const currentUser = $state({
   token: "",
