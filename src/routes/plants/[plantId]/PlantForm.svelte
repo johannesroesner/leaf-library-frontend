@@ -8,7 +8,7 @@
 
   type Props = {
     plant: Plant;
-    updateEvent?: (plant: Plant) => void;
+    updateEvent?: () => void;
   };
   let { plant = $bindable(), updateEvent }: Props = $props();
 
@@ -30,7 +30,7 @@
     return async ({ result, update }) => {
       if (result.type === "success") {
         if (result.data) {
-          if (updateEvent) updateEvent(result.data.data as Plant);
+          if (updateEvent) updateEvent();
           successMessage = result.data.successMessage as string;
         }
         await update();
