@@ -9,6 +9,7 @@
   import { util } from "$lib/services/leaf-library-utils";
   import DetailMap from "$lib/ui/DetailMap.svelte";
   import type { Plant } from "$lib/types/leaf-library-types";
+  import { invalidateAll } from "$app/navigation";
 
   currentPage.title = "Plant Details";
 
@@ -24,11 +25,9 @@
   let plant = $state(currentPlants.plants.find((p) => p._id === page.params.plantId));
   let updateStatus = $state(false);
 
-  function plantUpdated(updatedPlant: Plant) {
-    data.plants.push(updatedPlant);
-    util.updateData(data.plants, []);
-    plant = updatedPlant;
-    updateStatus = false;
+  async function plantUpdated() {
+    await invalidateAll();
+    window.location.reload();
   }
 </script>
 
